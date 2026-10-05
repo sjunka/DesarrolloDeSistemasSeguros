@@ -1,6 +1,6 @@
 {
   "titulo": "Entrega 1 · Retos Hackademic CMS",
-  "intro": "Taller del curso <b>Desarrollo de Sistemas Seguros</b> (SI6007). Resolucion documentada de los retos <b>1, 2, 5, 6, 7 y 10</b> de la plataforma OWASP Hackademic Challenges. Cada reto trae su <em>filosofia</em> (como piensa el atacante), el <em>paso a paso</em>, <em>soluciones alternativas</em> y, lo que mas pesa en este curso, <em>como se previene</em> con desarrollo seguro.",
-  "pie": "Entorno de practica autorizado (<code>playground.kontinuagroup.com</code>, vulnerable por diseno). Las vulnerabilidades mostradas son para aprendizaje defensivo. Los huecos de captura naranjas se rellenan pegando tus screenshots de la instancia en <code>app/public/img/retoNN/</code>.",
+  "intro": "Taller del curso <b>Desarrollo de Sistemas Seguros</b> (SI6007). Resolucion documentada de los retos <b>1, 2, 5, 6, 7 y 10</b> de la plataforma OWASP Hackademic Challenges. Cada reto trae su <em>filosofia</em> (como piensa el atacante), el <em>paso a paso</em>, <em>soluciones alternativas</em> y, lo que mas pesa en este curso, <em>como se previene</em> con desarrollo seguro. Todas las capturas son reales, tomadas sobre la instancia del curso.",
+  "pie": "Entorno de practica autorizado (<code>playground.kontinuagroup.com</code>, vulnerable por diseno). Las vulnerabilidades se muestran con fin defensivo/educativo. Evidencia capturada con Playwright sobre la instancia real.",
   "equipo": ["Sergio Alfredo Junca Valero"]
 }

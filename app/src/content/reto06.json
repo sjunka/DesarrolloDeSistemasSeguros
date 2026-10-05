@@ -1,38 +1,38 @@
 {
   "id": "06",
   "name": "Reto 6",
-  "sub": "El codigo ofuscado",
+  "sub": "El codigo ofuscado del caballero",
   "vuln": "Seguridad por oscuridad (JavaScript ofuscado)",
   "nivel": "Facil",
   "owasp": "A04 · Diseno inseguro",
-  "lead": "La pagina pide una contrasena y su fuente contiene JavaScript ofuscado (cadena codificada dentro de <code>unescape()</code> / <code>document.write()</code>). Objetivo: desofuscar y recuperar la clave.",
-  "why": "Ofuscar no es cifrar. El codigo ofuscado se ejecuta en el navegador, asi que el atacante puede <b>desofuscarlo ejecutandolo</b>: lo que el navegador entiende, el atacante lo entiende. Esconder una contrasena en codigo \"raro\" da sensacion de seguridad, pero el secreto sigue viajando al cliente.",
+  "lead": "Sitio \"HIDDEN SITE - SECRETS & CODES OF KNIGHT EPOCH\". Pide un codigo y su fuente trae JavaScript ofuscado (<code>document.write(unescape(\"%3C%68...\"))</code>). Objetivo: desofuscar y hallar el codigo.",
+  "why": "Ofuscar no es cifrar. El codigo ofuscado se ejecuta en el navegador, asi que el atacante lo <b>desofusca ejecutandolo</b>: lo que el navegador entiende, el atacante tambien. Esconder una clave en codigo \"raro\" da sensacion de seguridad, pero el secreto sigue viajando al cliente. Aqui, ademas, un segundo script tiene la comparacion en texto plano.",
   "recon": [
-    "Ver la fuente y localizar la cadena codificada dentro de <code>unescape(\"...\")</code> o similar.",
-    "Notar que un <code>document.write</code> arma dinamicamente el formulario y la logica."
+    "Ver la fuente: una gran cadena URL-encoded dentro de <code>unescape()</code>.",
+    "Un segundo script define <code>GetPassInfo()</code> que compara directamente con el codigo."
   ],
   "phases": [
     {
-      "h": "1. Desofuscar la cadena",
+      "h": "1. Desofuscar / leer la fuente",
       "steps": [
-        { "t": "Copiar la cadena URL-encoded y ejecutar <code>unescape(...)</code> en la consola del navegador (en vez de <code>document.write</code>, imprimir el resultado).", "e": "Cambiar <code>document.write</code> por <code>console.log</code> para ver el HTML/JS decodificado sin que se escriba en la pagina.", "c": "console.log(unescape(\"%3C...cadena-codificada...%3E\"))", "img": [{ "src": "reto06/01-ofuscado.png", "cap": "Cadena codificada en la fuente" }] }
+        { "t": "Copiar la cadena de <code>unescape(...)</code> y decodificarla (consola: <code>console.log(unescape(\"...\"))</code>), o leer el segundo script.", "e": "Decodificar revela el HTML/JS real. El segundo script ya trae la comparacion: <code>if (PassPhrase.value == 'easyyyyyyy!')</code>.", "img": [{ "src": "reto06/01-fuente-ofuscada.png", "cap": "Fuente real: JavaScript ofuscado con document.write(unescape(...))" }] }
       ]
     },
     {
-      "h": "2. Leer la contrasena",
+      "h": "2. Entrar con el codigo",
       "steps": [
-        { "t": "En el codigo ya legible, hallar la funcion que valida y la clave en texto plano.", "e": "En el set original la clave es <code>easyyyyyyy!</code>. <b>Confirma el valor exacto en tu instancia</b>, puede diferir.", "img": [{ "src": "reto06/02-decodificado.png", "cap": "Codigo decodificado con la contrasena visible" }] },
-        { "t": "Ingresar la contrasena para superar el reto." }
+        { "t": "El codigo es <b>easyyyyyyy!</b>.", "c": "easyyyyyyy!" },
+        { "t": "Escribirlo en el campo: el reto responde <b>Congratulations!</b>.", "img": [{ "src": "reto06/02-exito.png", "cap": "Congratulations! tras enviar easyyyyyyy!" }] }
       ]
     }
   ],
   "alt": [
-    "Usar un deofuscador/beautifier de JS online o <code>js-beautify</code> para dejar el codigo legible.",
-    "Decodificar la cadena con cualquier herramienta de URL-decode (CyberChef) sin tocar la consola."
+    "Beautifier/deofuscador de JS (js-beautify) o CyberChef (URL-decode) para dejar el codigo legible.",
+    "Cambiar <code>document.write</code> por <code>console.log</code> para ver el decodificado sin que se escriba en la pagina."
   ],
   "defensa": [
-    "La ofuscacion no protege secretos: todo lo que llega al cliente es recuperable. No es un control de seguridad.",
-    "Mantener la logica sensible y los secretos en el servidor.",
-    "La minificacion/ofuscacion sirve para tamano o propiedad intelectual, nunca para ocultar credenciales."
+    "La ofuscacion no protege secretos: todo lo que llega al cliente es recuperable; no es control de seguridad.",
+    "Mantener logica sensible y secretos en el servidor.",
+    "Minificar/ofuscar sirve para tamano o propiedad intelectual, nunca para ocultar credenciales."
   ]
 }

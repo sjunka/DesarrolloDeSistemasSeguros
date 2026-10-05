@@ -1,40 +1,40 @@
 {
   "id": "07",
   "name": "Reto 7",
-  "sub": "El cookie que te hace admin",
-  "vuln": "Escalada de privilegios por manipulacion de cookie",
+  "sub": "Las notas privadas de la estudiante",
+  "vuln": "Exposicion de informacion + control de acceso roto",
   "nivel": "Medio",
-  "owasp": "A01 · Perdida de control de acceso",
-  "lead": "Tras iniciar sesion con un usuario valido, el nivel de privilegio se guarda en una cookie del lado del cliente (p. ej. <code>userlevel=user</code>). Objetivo: acceder como administrador.",
-  "why": "El servidor confia en un dato que vive en el navegador del usuario: la cookie de rol. Como el cliente puede editar sus propias cookies, puede <b>auto-ascenderse</b> cambiando <code>user</code> por <code>admin</code>. El rol de un usuario jamas debe depender de un valor que el usuario puede reescribir.",
+  "owasp": "A01 / A05 · Control de acceso y mala configuracion",
+  "lead": "Pagina \"Module marks for student\": pide un nombre y muestra sus notas. Cualquier nombre que no exista responde <code>ERRONEOUS IMPORT OF DATA!</code>. Hay una cookie llamada <code>not_the_cookie_you_are_looking_for</code> (senuelo que distrae). Objetivo: ver las notas privadas de un estudiante.",
+  "why": "El reto distrae con una cookie \"que no es la que buscas\". El fallo real es doble: el servidor <b>filtra un nombre de usuario valido en un archivo accesible</b> y luego <b>entrega datos privados sin autorizacion</b> a quien pida ese nombre. No importa quien seas: si conoces el nombre, ves sus notas. Es control de acceso roto, no un tema de cookies.",
   "recon": [
-    "Encontrar un usuario valido: el set original expone <code>Irene</code> en <code>lastlogin.txt</code> dentro de un directorio listable (p. ej. <code>/index_files/</code>).",
-    "Tras loguear, abrir DevTools › Application › Cookies y revisar las cookies de sesion y de rol."
+    "Probar nombres al azar: siempre <code>ERRONEOUS IMPORT OF DATA!</code>. Se necesita un nombre valido.",
+    "La carpeta <code>index_files/</code> no lista (403), pero el archivo <code>index_files/lastlogin.txt</code> si es accesible y filtra el ultimo usuario.",
+    "La cookie <code>not_the_cookie_you_are_looking_for</code> es un senuelo: cambiarla no hace nada."
   ],
   "phases": [
     {
-      "h": "1. Entrar con un usuario valido",
+      "h": "1. Conseguir un nombre valido (info disclosure)",
       "steps": [
-        { "t": "Obtener el usuario desde el archivo expuesto por listado de directorios.", "e": "El listado de directorios (misconfig del servidor) deja ver <code>lastlogin.txt</code> con el nombre de usuario. <b>Verifica el nombre en tu instancia.</b>", "c": "https://playground.kontinuagroup.com/<ruta>/index_files/lastlogin.txt", "img": [{ "src": "reto07/01-lastlogin.png", "cap": "Archivo lastlogin.txt con el usuario" }] },
-        { "t": "Enviar el formulario de login con ese usuario." }
+        { "t": "Leer <code>index_files/lastlogin.txt</code>: filtra la ultima sesion.", "e": "Archivo sensible servido sin control: \"Last Login user: Irene Pretty : Irene at 14/3/2000...\". El nombre a usar es <b>Irene</b>.", "c": "https://playground.kontinuagroup.com/challenges/ch007/index_files/lastlogin.txt", "img": [{ "src": "reto07/01-lastlogin.png", "cap": "lastlogin.txt filtra el usuario valido: Irene" }] }
       ]
     },
     {
-      "h": "2. Elevar privilegios en la cookie",
+      "h": "2. Pedir las notas sin autorizacion",
       "steps": [
-        { "t": "Localizar la cookie de rol (p. ej. <code>userlevel=user</code>) y editarla a <code>admin</code>.", "e": "En DevTools › Application › Cookies se edita el valor en caliente. Luego reenviar la peticion / recargar.", "c": "userlevel: user  ->  userlevel: admin", "img": [{ "src": "reto07/02-cookie.png", "cap": "Cookie userlevel editada a admin" }] },
-        { "t": "Recargar: el acceso ahora es con privilegios elevados.", "img": [{ "src": "reto07/03-admin.png", "cap": "Acceso como administrador" }] }
+        { "t": "En el formulario \"Module marks for student\" escribir <code>Irene</code> y enviar.", "img": [{ "src": "reto07/02-formulario.png", "cap": "Formulario 'Module marks for student'" }] },
+        { "t": "El sistema devuelve las notas privadas de Irene Pretty (SUN 666-3-6) sin ninguna comprobacion de permisos.", "e": "Broken access control: cualquiera que conozca el nombre ve datos privados (notas, identificador). El flag del reto es haber accedido a estas notas.", "img": [{ "src": "reto07/03-notas.png", "cap": "Notas privadas de Irene Pretty expuestas sin autorizacion" }] }
       ]
     }
   ],
   "alt": [
-    "Editar la cookie con un proxy (Burp Suite › Repeater) en vez de DevTools.",
-    "Si el usuario no estuviera expuesto: enumeracion de usuarios o SQLi segun la pagina de login."
+    "Enumerar nombres (los que aparecen en otros retos o diccionario) hasta que uno no de <code>ERRONEOUS</code>.",
+    "Interceptar la peticion con Burp Suite para automatizar la prueba de nombres (fuzzing del parametro <code>name</code>)."
   ],
   "defensa": [
-    "El rol/privilegio se resuelve en el servidor a partir de la sesion autenticada, nunca desde una cookie que el cliente edita.",
-    "Usar cookies de sesion opacas y firmadas (<code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>); el servidor mapea sesion -> rol internamente.",
-    "Deshabilitar listado de directorios y no publicar archivos como <code>lastlogin.txt</code>.",
-    "Principio de minimo privilegio y verificacion de autorizacion en cada endpoint sensible."
+    "No exponer archivos como <code>lastlogin.txt</code>; deshabilitar listado y bloquear rutas de datos.",
+    "Autorizar cada consulta: un estudiante solo ve SUS notas (verificar identidad/rol en el servidor en cada endpoint).",
+    "No confiar en que \"nadie sabe el nombre\" (seguridad por oscuridad); aplicar control de acceso por objeto (evitar IDOR).",
+    "No sembrar cookies/senales falsas como control; la seguridad no depende de distraer al atacante."
   ]
 }

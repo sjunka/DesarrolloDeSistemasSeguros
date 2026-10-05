@@ -20,16 +20,20 @@ App React+Vite (mismo stack que el repo de Nube) en `../../app/`. Rutas `#/reto/
 Correr local: `cd app && npm install && npm run dev`. Publica a GH Pages vía `.github/workflows/deploy.yml` (base `/DesarrolloDeSistemasSeguros/`).
 Contenido por reto en `app/src/content/retoNN.json`; capturas en `app/public/img/retoNN/`.
 
-## Ejercicios a entregar
+## Ejercicios a entregar (resueltos sobre la instancia real + evidencia)
 
-- [x] Ejercicio 1 - Datos sensibles en la fuente (white/rabbit → buzón → ruta oculta en imagen → emails.txt → agente viernes 13). **Falta:** correo exacto de tu instancia.
-- [x] Ejercicio 2 - Validación de contraseña del lado del cliente (JS `GetPassInfo` → consola/debugger). **Falta:** clave exacta.
-- [x] Ejercicio 5 - Control de acceso por `User-Agent` (falsificar UA).
-- [x] Ejercicio 6 - JS ofuscado (`unescape`/`document.write` → consola). Clave original `easyyyyyyy!`, **confirmar**.
-- [x] Ejercicio 7 - Escalada por cookie (`userlevel=user`→`admin`; usuario desde `lastlogin.txt`).
-- [x] Ejercicio 10 - Campo oculto `LetMeIn=False`→`True` → decodificar serial. **Falta:** serial exacto.
+- [x] Ejercicio 1 - Datos sensibles en fuente + listado de directorios. white/rabbit → `mails.php` → imagen apunta a `secret_area_/` → `mails.txt`. **Respuesta: `Friday13@JasonLives.com`** (Jasson Killer, viernes 13).
+- [x] Ejercicio 2 - Validación de contraseña del lado del cliente (`GetPassInfo()` sobre "givesacountinatoap lary"). **Clave: `enter a coin to play`**.
+- [x] Ejercicio 5 - Control de acceso por `User-Agent`. **UA: `p0wnBrowser`**.
+- [x] Ejercicio 6 - JS ofuscado (`document.write(unescape(...))`) + comparación en claro. **Código: `easyyyyyyy!`**.
+- [x] Ejercicio 7 - Info disclosure (`index_files/lastlogin.txt` filtra `Irene`) + broken access control (`ch007.php` entrega notas privadas sin autorización; la cookie `not_the_cookie_you_are_looking_for` es señuelo).
+- [x] Ejercicio 10 - Campo oculto `LetMeIn=False`→`True` → alert URL-encoded. **Serial: `TRVN-67Q2-RU98-546F-H1ZT`**.
 
-Cada reto documentado con: filosofía, recon, paso a paso, soluciones alternativas, cómo se previene (desarrollo seguro) y mapeo OWASP Top 10. Faltan solo las capturas de la instancia y confirmar los valores propios marcados arriba.
+Cada reto documentado con: filosofía, recon, paso a paso, soluciones alternativas, cómo se previene (desarrollo seguro) y mapeo OWASP Top 10. Las 14 capturas son reales (Playwright sobre la instancia del curso), en `../../app/public/img/retoNN/`.
+
+Sitio en vivo: https://sjunka.github.io/DesarrolloDeSistemasSeguros/#/reto/01
+
+Pendiente (no técnico): confirmar con el profe fecha/peso/canal de entrega y el nombre/número de equipo.
 
 ## Plan
 

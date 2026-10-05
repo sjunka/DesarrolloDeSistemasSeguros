@@ -2,41 +2,41 @@
   "id": "01",
   "name": "Reto 1",
   "sub": "El agente desaparecido",
-  "vuln": "Datos sensibles en el codigo fuente",
+  "vuln": "Datos sensibles en la fuente + listado de directorios",
   "nivel": "Facil",
-  "owasp": "A07 · Fallas de identificacion y autenticacion",
-  "lead": "<em>\"Our agents informed us that there is reasonable suspicion that the site of this Logistics Company is a blind for a human organs smuggling organisation. Your objective is to find the missing agent's email address.\"</em> Hay que entrar al sitio y encontrar el correo del agente desaparecido.",
-  "why": "La primera leccion del hacking web: <b>lo que el navegador recibe, el atacante lo lee todo</b>. Credenciales, comentarios, rutas y pistas escondidas en el HTML o en recursos estaticos no estan protegidas: solo estan fuera de la vista. Pensar como atacante aqui es simple: antes de forzar nada, <em>leer la fuente</em>. La pista \"white rabbit\" (Alicia: seguir al conejo) insinua que hay algo oculto que hay que seguir.",
+  "owasp": "A01 / A05 · Control de acceso y mala configuracion",
+  "lead": "<em>\"Our agents informed us that there is reasonable suspicion that the site of this Logistics Company is a blind for a human organs smuggling organisation. Your objective is to find the missing agent's email address.\"</em> Sitio de la \"Greek Logistics Company\". Hay que entrar y hallar el correo del agente desaparecido.",
+  "why": "Primera leccion del hacking web: <b>lo que el navegador recibe, el atacante lo lee todo</b>. Credenciales en la pagina, imagenes que apuntan a carpetas y archivos servidos sin control no estan protegidos: solo estan fuera de la vista. Antes de forzar nada, <em>leer la fuente y seguir cada recurso</em> (la pista \"white rabbit\": seguir al conejo).",
   "recon": [
-    "Abrir la pagina del reto y ver el codigo fuente (<code>Ctrl+U</code>) completo, incluidos comentarios y texto del mismo color del fondo.",
-    "Revisar cada imagen: clic derecho › abrir en pestana, mirar su nombre y si enlaza a una ruta.",
-    "Probar rutas tipicas de exposicion: listado de directorios, archivos <code>.txt</code>, <code>robots.txt</code>."
+    "Ver la portada: las credenciales <code>white, rabbit</code> estan escritas en la propia pagina.",
+    "Tras entrar, inspeccionar cada imagen: una apunta a una carpeta oculta.",
+    "Probar esa carpeta directamente (listado de directorios activo)."
   ],
   "phases": [
     {
-      "h": "1. Hallar las credenciales en la fuente",
+      "h": "1. Entrar con las credenciales de la fuente",
       "steps": [
-        { "t": "Ver fuente de la pagina de login y buscar texto oculto / comentarios.", "e": "Las credenciales estan escritas en la propia pagina (comentario HTML o texto en blanco sobre fondo blanco). El par es <code>white</code> / <code>rabbit</code>.", "c": "usuario: white   ·   contrasena: rabbit", "img": [{ "src": "reto01/01-fuente-credenciales.png", "cap": "Credenciales white/rabbit visibles en el codigo fuente" }] },
-        { "t": "Iniciar sesion con <code>white</code> / <code>rabbit</code>.", "e": "La autenticacion solo esconde el secreto, no lo protege: es <b>seguridad por oscuridad</b>." }
+        { "t": "En la portada estan visibles usuario y clave: <code>white</code> / <code>rabbit</code>.", "e": "Credenciales en texto plano en la pagina. Es <b>seguridad por oscuridad</b>: esconder el secreto no lo protege.", "c": "usuario: white   ·   clave: rabbit", "img": [{ "src": "reto01/01-landing.png", "cap": "Portada de Greek Logistics Company con las credenciales white/rabbit a la vista" }] },
+        { "t": "Enviar el formulario y pasar al area segura (frames con el menu de la empresa)." }
       ]
     },
     {
-      "h": "2. Seguir al conejo hasta el correo",
+      "h": "2. Seguir al conejo hasta la lista de correos",
       "steps": [
-        { "t": "Entrar a la seccion de correo (\"Special Clients Mailbox\").", "img": [{ "src": "reto01/02-mailbox.png", "cap": "Buzon de clientes especiales" }] },
-        { "t": "Inspeccionar la imagen unica de esa pagina: enlaza a una ruta oculta.", "e": "La pista \"white rabbit\": la imagen apunta a un directorio con un archivo de correos (p. ej. <code>emails.txt</code>). Se ve en el atributo del enlace o abriendo la imagen en pestana.", "c": "Inspeccionar elemento sobre la imagen › copiar el href/ruta" },
-        { "t": "Abrir la lista de correos y encontrar el del agente (pista: cumpleanos viernes 13).", "e": "El correo correcto corresponde a la persona que cumple el viernes 13 (referencia Jason / Friday the 13th). <b>Verifica el valor exacto en tu instancia</b> y guardalo como respuesta.", "img": [{ "src": "reto01/03-emails.png", "cap": "Lista de correos; marcar el del agente desaparecido" }] }
+        { "t": "Abrir <code>mails.php</code> (Special Clients' Mailbox): tiene una imagen unica <code>./secret_area_/mails.gif</code>.", "e": "Inspeccionando la imagen se ve que vive en la carpeta <code>secret_area_/</code>. Esa ruta es la pista oculta.", "img": [{ "src": "reto01/02-mailbox.png", "cap": "Buzon con la imagen que delata la carpeta secret_area_/" }] },
+        { "t": "Abrir la carpeta <code>main/secret_area_/</code>: el servidor lista su contenido y expone <code>mails.txt</code>.", "e": "Listado de directorios activado (mala configuracion): deja ver y descargar archivos no enlazados.", "c": "https://playground.kontinuagroup.com/challenges/ch001/main/secret_area_/" },
+        { "t": "En <code>mails.txt</code> esta la lista; el agente es el de cumpleanos viernes 13: <b>Friday13@JasonLives.com</b> (\"Jasson Killer\", referencia a Jason / viernes 13).", "e": "Respuesta del reto: <code>Friday13@JasonLives.com</code>. El mensaje final se envia desde <code>Diaxirisths.php</code> (Central Communication Panel).", "img": [{ "src": "reto01/03-emails.png", "cap": "mails.txt: el agente desaparecido es Friday13@JasonLives.com" }] }
       ]
     }
   ],
   "alt": [
-    "Si el login no cae por la fuente: <b>SQL injection</b> en el formulario con <code>' OR '1'='1' -- </code> para bypass de autenticacion.",
-    "Spidering automatico (Burp Suite / OWASP ZAP) para mapear rutas ocultas y archivos <code>.txt</code> sin inspeccionar a mano."
+    "Si el login no cayera por la fuente: <b>SQL injection</b> en el formulario con <code>' OR '1'='1' -- </code>.",
+    "Spidering con Burp Suite / OWASP ZAP para descubrir <code>secret_area_/</code> y <code>mails.txt</code> sin inspeccionar a mano."
   ],
   "defensa": [
-    "Nunca poner secretos (usuarios, claves, tokens, rutas internas) en HTML, JS ni comentarios: todo lo que llega al cliente es publico.",
-    "Deshabilitar el listado de directorios en el servidor (nginx/apache) y no servir archivos de datos como <code>emails.txt</code>.",
-    "Control de acceso real en el servidor para cada recurso, no \"esconder\" la URL (seguridad por oscuridad no es control).",
-    "Clasificar datos: una lista de correos es dato personal (Ley 1581 en Colombia); no debe quedar accesible."
+    "Nunca poner credenciales en HTML, JS ni comentarios: todo lo que llega al cliente es publico.",
+    "Deshabilitar el listado de directorios (nginx/apache) y no servir archivos de datos como <code>mails.txt</code>.",
+    "Control de acceso real en el servidor para cada recurso; esconder la URL no es control.",
+    "Una lista de correos es dato personal (Ley 1581 en Colombia): no debe quedar accesible."
   ]
 }
