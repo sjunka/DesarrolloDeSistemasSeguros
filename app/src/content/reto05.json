@@ -1,0 +1,38 @@
+{
+  "id": "05",
+  "name": "Reto 5",
+  "sub": "El portero que cree en el User-Agent",
+  "vuln": "Control de acceso basado en cabecera User-Agent",
+  "nivel": "Facil",
+  "owasp": "A01 · Perdida de control de acceso",
+  "lead": "La pagina solo deja pasar a un navegador especifico. El acceso se decide mirando la cabecera HTTP <code>User-Agent</code> que envia el cliente. Objetivo: entrar aunque tu navegador no sea \"el correcto\".",
+  "why": "El <code>User-Agent</code> es una cadena que el cliente elige y puede falsificar a voluntad. Basar una decision de seguridad en un dato que controla el atacante es, por definicion, un control roto. Es la misma logica debil que el profe marco en clase para los clonadores: el UA es senal de primera linea, no un control de acceso.",
+  "recon": [
+    "Intentar entrar y leer el mensaje de rechazo: suele revelar que navegador/UA espera.",
+    "Interceptar la peticion (DevTools › Network, o un proxy) para ver que cabecera se evalua."
+  ],
+  "phases": [
+    {
+      "h": "1. Descubrir el User-Agent esperado",
+      "steps": [
+        { "t": "Leer la pista del reto o el mensaje de error para saber el UA requerido (p. ej. un nombre tipo <code>p0wnBrowser</code>).", "img": [{ "src": "reto05/01-rechazo.png", "cap": "Mensaje que indica el navegador esperado" }] }
+      ]
+    },
+    {
+      "h": "2. Falsificar el User-Agent",
+      "steps": [
+        { "t": "Cambiar el User-Agent del navegador por el valor esperado.", "e": "Con una extension \"User-Agent Switcher\" o desde DevTools (Network conditions › User agent personalizado). Tambien con <code>curl -A</code> desde terminal.", "c": "curl -A \"p0wnBrowser\" https://playground.kontinuagroup.com/<ruta-del-reto>" },
+        { "t": "Recargar la pagina con el UA falsificado: el acceso queda permitido.", "img": [{ "src": "reto05/02-acceso.png", "cap": "Acceso concedido tras cambiar el UA" }] }
+      ]
+    }
+  ],
+  "alt": [
+    "Interceptar y editar la cabecera con Burp Suite / OWASP ZAP en vez de una extension.",
+    "<code>curl</code>/<code>wget</code> con <code>-A</code>/<code>--user-agent</code> para enviar el UA directo sin navegador."
+  ],
+  "defensa": [
+    "No usar el User-Agent como control de acceso: es dato no confiable que el cliente controla.",
+    "Autorizar con sesion autenticada del lado servidor (tokens, roles), no con cabeceras falsificables.",
+    "Si se filtra UA (anti-bot), tratarlo como senal de riesgo combinada con otras (rate limit, fingerprint, reputacion IP), nunca como unica barrera."
+  ]
+}

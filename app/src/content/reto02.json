@@ -1,0 +1,39 @@
+{
+  "id": "02",
+  "name": "Reto 2",
+  "sub": "La clave que viaja en el navegador",
+  "vuln": "Validacion de contrasena del lado del cliente",
+  "nivel": "Facil",
+  "owasp": "A04 · Diseno inseguro",
+  "lead": "Hay un formulario que pide una contrasena. El boton de enviar llama a una funcion JavaScript (p. ej. <code>GetPassInfo</code>) que arma y compara la clave. Objetivo: obtener la contrasena correcta.",
+  "why": "Regla de oro del desarrollo seguro: <b>nunca confies en el cliente</b>. Si la logica que decide si la clave es correcta corre en el navegador, el atacante la tiene delante: puede leerla, ejecutarla paso a paso o simplemente observar que valor se compara. La contrasena no esta protegida, esta <em>expuesta en el codigo</em>.",
+  "recon": [
+    "Ver fuente de la pagina del formulario y localizar la funcion JS que valida (nombre tipo <code>GetPassInfo</code>).",
+    "Identificar que la comparacion de la clave ocurre en el cliente, no en el servidor."
+  ],
+  "phases": [
+    {
+      "h": "1. Leer la logica que arma la clave",
+      "steps": [
+        { "t": "Abrir la fuente y copiar la funcion JavaScript que construye/compara la contrasena.", "img": [{ "src": "reto02/01-funcion-js.png", "cap": "Funcion JS que valida la contrasena" }] },
+        { "t": "Pasarla por un interprete / la consola del navegador para ver que valor produce.", "e": "La funcion concatena cadenas para armar la clave esperada. Ejecutarla devuelve ese valor directamente.", "c": "// Pega la funcion en la consola (F12) y llama lo que arma la clave; mira el valor resultante" }
+      ]
+    },
+    {
+      "h": "2. Extraer la contrasena",
+      "steps": [
+        { "t": "Poner un breakpoint en la comparacion (Debugger / Firebug) y leer la variable con la clave esperada.", "e": "Alternativa sin ejecutar: en el debugger, cuando la funcion compara, el valor correcto queda visible en una variable (p. ej. la que luego dice \"Wrong\"). <b>Anota el valor exacto de tu instancia.</b>", "img": [{ "src": "reto02/02-debugger.png", "cap": "Breakpoint mostrando la clave esperada" }] },
+        { "t": "Escribir la contrasena obtenida para pasar el reto." }
+      ]
+    }
+  ],
+  "alt": [
+    "Leer el valor desde la barra de direcciones si la funcion lo expone en un parametro <code>result</code>.",
+    "Reescribir en consola la funcion de comparacion para que siempre retorne verdadero (<code>return true</code>)."
+  ],
+  "defensa": [
+    "La validacion de credenciales SIEMPRE en el servidor; el cliente solo mejora la experiencia, nunca decide.",
+    "No embeber secretos ni logica de autenticacion en JavaScript entregado al navegador.",
+    "Guardar contrasenas con hash fuerte y salteado (bcrypt/argon2) y compararlas en backend, nunca en texto plano en el front."
+  ]
+}

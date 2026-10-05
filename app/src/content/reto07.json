@@ -1,0 +1,40 @@
+{
+  "id": "07",
+  "name": "Reto 7",
+  "sub": "El cookie que te hace admin",
+  "vuln": "Escalada de privilegios por manipulacion de cookie",
+  "nivel": "Medio",
+  "owasp": "A01 · Perdida de control de acceso",
+  "lead": "Tras iniciar sesion con un usuario valido, el nivel de privilegio se guarda en una cookie del lado del cliente (p. ej. <code>userlevel=user</code>). Objetivo: acceder como administrador.",
+  "why": "El servidor confia en un dato que vive en el navegador del usuario: la cookie de rol. Como el cliente puede editar sus propias cookies, puede <b>auto-ascenderse</b> cambiando <code>user</code> por <code>admin</code>. El rol de un usuario jamas debe depender de un valor que el usuario puede reescribir.",
+  "recon": [
+    "Encontrar un usuario valido: el set original expone <code>Irene</code> en <code>lastlogin.txt</code> dentro de un directorio listable (p. ej. <code>/index_files/</code>).",
+    "Tras loguear, abrir DevTools › Application › Cookies y revisar las cookies de sesion y de rol."
+  ],
+  "phases": [
+    {
+      "h": "1. Entrar con un usuario valido",
+      "steps": [
+        { "t": "Obtener el usuario desde el archivo expuesto por listado de directorios.", "e": "El listado de directorios (misconfig del servidor) deja ver <code>lastlogin.txt</code> con el nombre de usuario. <b>Verifica el nombre en tu instancia.</b>", "c": "https://playground.kontinuagroup.com/<ruta>/index_files/lastlogin.txt", "img": [{ "src": "reto07/01-lastlogin.png", "cap": "Archivo lastlogin.txt con el usuario" }] },
+        { "t": "Enviar el formulario de login con ese usuario." }
+      ]
+    },
+    {
+      "h": "2. Elevar privilegios en la cookie",
+      "steps": [
+        { "t": "Localizar la cookie de rol (p. ej. <code>userlevel=user</code>) y editarla a <code>admin</code>.", "e": "En DevTools › Application › Cookies se edita el valor en caliente. Luego reenviar la peticion / recargar.", "c": "userlevel: user  ->  userlevel: admin", "img": [{ "src": "reto07/02-cookie.png", "cap": "Cookie userlevel editada a admin" }] },
+        { "t": "Recargar: el acceso ahora es con privilegios elevados.", "img": [{ "src": "reto07/03-admin.png", "cap": "Acceso como administrador" }] }
+      ]
+    }
+  ],
+  "alt": [
+    "Editar la cookie con un proxy (Burp Suite › Repeater) en vez de DevTools.",
+    "Si el usuario no estuviera expuesto: enumeracion de usuarios o SQLi segun la pagina de login."
+  ],
+  "defensa": [
+    "El rol/privilegio se resuelve en el servidor a partir de la sesion autenticada, nunca desde una cookie que el cliente edita.",
+    "Usar cookies de sesion opacas y firmadas (<code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>); el servidor mapea sesion -> rol internamente.",
+    "Deshabilitar listado de directorios y no publicar archivos como <code>lastlogin.txt</code>.",
+    "Principio de minimo privilegio y verificacion de autorizacion en cada endpoint sensible."
+  ]
+}

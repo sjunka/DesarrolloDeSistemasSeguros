@@ -1,0 +1,38 @@
+{
+  "id": "06",
+  "name": "Reto 6",
+  "sub": "El codigo ofuscado",
+  "vuln": "Seguridad por oscuridad (JavaScript ofuscado)",
+  "nivel": "Facil",
+  "owasp": "A04 · Diseno inseguro",
+  "lead": "La pagina pide una contrasena y su fuente contiene JavaScript ofuscado (cadena codificada dentro de <code>unescape()</code> / <code>document.write()</code>). Objetivo: desofuscar y recuperar la clave.",
+  "why": "Ofuscar no es cifrar. El codigo ofuscado se ejecuta en el navegador, asi que el atacante puede <b>desofuscarlo ejecutandolo</b>: lo que el navegador entiende, el atacante lo entiende. Esconder una contrasena en codigo \"raro\" da sensacion de seguridad, pero el secreto sigue viajando al cliente.",
+  "recon": [
+    "Ver la fuente y localizar la cadena codificada dentro de <code>unescape(\"...\")</code> o similar.",
+    "Notar que un <code>document.write</code> arma dinamicamente el formulario y la logica."
+  ],
+  "phases": [
+    {
+      "h": "1. Desofuscar la cadena",
+      "steps": [
+        { "t": "Copiar la cadena URL-encoded y ejecutar <code>unescape(...)</code> en la consola del navegador (en vez de <code>document.write</code>, imprimir el resultado).", "e": "Cambiar <code>document.write</code> por <code>console.log</code> para ver el HTML/JS decodificado sin que se escriba en la pagina.", "c": "console.log(unescape(\"%3C...cadena-codificada...%3E\"))", "img": [{ "src": "reto06/01-ofuscado.png", "cap": "Cadena codificada en la fuente" }] }
+      ]
+    },
+    {
+      "h": "2. Leer la contrasena",
+      "steps": [
+        { "t": "En el codigo ya legible, hallar la funcion que valida y la clave en texto plano.", "e": "En el set original la clave es <code>easyyyyyyy!</code>. <b>Confirma el valor exacto en tu instancia</b>, puede diferir.", "img": [{ "src": "reto06/02-decodificado.png", "cap": "Codigo decodificado con la contrasena visible" }] },
+        { "t": "Ingresar la contrasena para superar el reto." }
+      ]
+    }
+  ],
+  "alt": [
+    "Usar un deofuscador/beautifier de JS online o <code>js-beautify</code> para dejar el codigo legible.",
+    "Decodificar la cadena con cualquier herramienta de URL-decode (CyberChef) sin tocar la consola."
+  ],
+  "defensa": [
+    "La ofuscacion no protege secretos: todo lo que llega al cliente es recuperable. No es un control de seguridad.",
+    "Mantener la logica sensible y los secretos en el servidor.",
+    "La minificacion/ofuscacion sirve para tamano o propiedad intelectual, nunca para ocultar credenciales."
+  ]
+}

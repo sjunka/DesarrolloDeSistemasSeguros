@@ -1,0 +1,39 @@
+{
+  "id": "10",
+  "name": "Reto 10",
+  "sub": "El campo oculto que dice 'False'",
+  "vuln": "Confianza en campos ocultos del formulario",
+  "nivel": "Medio",
+  "owasp": "A01 · Perdida de control de acceso",
+  "lead": "El formulario tiene un campo oculto (p. ej. <code>&lt;input type=\"hidden\" name=\"LetMeIn\" value=\"False\"&gt;</code>). La aplicacion decide el acceso segun ese valor. Objetivo: entrar y obtener el serial que confirma el reto.",
+  "why": "Un campo <code>hidden</code> esta oculto a la vista, no al control del usuario: viaja en el HTML y se puede editar antes de enviar. Que el servidor crea el valor <code>LetMeIn</code> que manda el cliente es confiar en entrada no confiable. El cliente decide un dato que deberia decidir el servidor.",
+  "recon": [
+    "Ver la fuente del formulario y localizar los <code>input type=\"hidden\"</code>.",
+    "Identificar el campo que gobierna el acceso (nombre revelador tipo <code>LetMeIn</code>)."
+  ],
+  "phases": [
+    {
+      "h": "1. Alterar el campo oculto",
+      "steps": [
+        { "t": "Con el editor inline del navegador (Inspeccionar elemento) cambiar <code>value=\"False\"</code> por <code>value=\"True\"</code>.", "e": "Tambien sirve interceptar el POST con un proxy y editar el parametro antes de que llegue al servidor.", "c": "<input type=\"hidden\" name=\"LetMeIn\" value=\"False\">  ->  value=\"True\"", "img": [{ "src": "reto10/01-hidden.png", "cap": "Campo oculto LetMeIn editado a True" }] },
+        { "t": "Enviar el formulario con el campo modificado." }
+      ]
+    },
+    {
+      "h": "2. Decodificar y entregar el serial",
+      "steps": [
+        { "t": "La respuesta trae una cadena URL-encoded: decodificarla para leer el serial.", "e": "Usar URL-decode (consola: <code>decodeURIComponent(...)</code> o CyberChef). <b>Anota el serial exacto de tu instancia.</b>", "c": "decodeURIComponent(\"%53%65%72%69%61%6c...\")", "img": [{ "src": "reto10/02-serial.png", "cap": "Serial revelado tras decodificar" }] },
+        { "t": "Ingresar el serial en el campo de confirmacion para completar el reto." }
+      ]
+    }
+  ],
+  "alt": [
+    "Interceptar y editar el parametro con Burp Suite / OWASP ZAP en lugar del editor inline.",
+    "Enviar el POST a mano con <code>curl -d \"LetMeIn=True\"</code> saltando el formulario."
+  ],
+  "defensa": [
+    "No confiar en campos ocultos ni en ningun dato del formulario para decisiones de acceso: validar y decidir en el servidor.",
+    "El estado sensible (autorizacion, precios, cantidades) vive en la sesion del servidor, no en el HTML del cliente.",
+    "No codificar/ocultar secretos con URL-encoding: codificar no es cifrar."
+  ]
+}
