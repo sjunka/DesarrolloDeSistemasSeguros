@@ -15,7 +15,15 @@ Tareas, fechas y entregas van en `board.md`. Clases recientes arriba.
 - Repaso: hace 8 días vimos los 7 pasos para que se materialice un incidente.
 - Tácticas = categorías de acciones del atacante; técnicas = acciones particulares dentro de cada categoría.
 - Persistencia: cualquier cosa que el atacante haga en un equipo para mantener acceso. Puede quedarse meses sin que uno se entere.
-- Cierre lección 1 (ciclo DevSecOps, final): cuidar secretos e información de autenticación que se pueda fugar; al generar despliegues revisar vulnerabilidades de contenedores y artefactos de despliegue; implementar; operar parchando seguridad; monitorear la operación.
+- DevSecOps: CI/CD como ciclo infinito. Desarrollo = planear, codificar, construir, probar. Operación = release, implementar, operar, monitorear. Seguridad en cada etapa:
+  - Planear: modelado de amenazas (desde mañana en detalle, modelo básico). Un análisis completo puede dar 500.000-1.000.000 escenarios de riesgo, inmanejable; enfocarse en los más críticos deja el riesgo razonablemente controlado. De las amenazas salen los requerimientos (la otra semana, incluye temas de IA). También planificación organizacional para integrar el proceso de punta a punta.
+  - Codificar: gestión de información sensible (secrets, que no se filtren usuarios y contraseñas), pruebas estáticas, lineamientos de seguridad por framework.
+  - Construir: revisar seguridad de librerías de terceros, actualizarlas sin romper nada, pruebas estáticas en el build.
+  - Probar: pruebas dinámicas.
+  - Release: autorización de seguridad, verificar que no se fuguen secrets.
+  - Desplegar: revisar vulnerabilidades de contenedores y artefactos de despliegue.
+  - Operar: parchar seguridad. Monitorear la operación.
+- Fin lección 1.
 - Tarea para mañana (sáb 10-oct): llegar con una herramienta instalada (enlace para Windows que el profe puso en el chat de Teams; no quedó en la transcripción). Se trabaja en la sesión.
 
 ---
