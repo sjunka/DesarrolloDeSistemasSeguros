@@ -12,6 +12,9 @@ Tareas, fechas y entregas van en `board.md`. Clases recientes arriba.
 
 **Notas:**
 - Dicta: Manuel Humberto Santander Peláez (virtual, Teams con transcripción).
+- Repaso: hace 8 días vimos los 7 pasos para que se materialice un incidente.
+- Tácticas = categorías de acciones del atacante; técnicas = acciones particulares dentro de cada categoría.
+- Persistencia: cualquier cosa que el atacante haga en un equipo para mantener acceso. Puede quedarse meses sin que uno se entere.
 - Cierre lección 1 (ciclo DevSecOps, final): cuidar secretos e información de autenticación que se pueda fugar; al generar despliegues revisar vulnerabilidades de contenedores y artefactos de despliegue; implementar; operar parchando seguridad; monitorear la operación.
 - Tarea para mañana (sáb 10-oct): llegar con una herramienta instalada (enlace para Windows que el profe puso en el chat de Teams; no quedó en la transcripción). Se trabaja en la sesión.
 
