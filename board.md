@@ -31,6 +31,9 @@ Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 ### 2026-10-03 - Clase 1
 - Taller en clase: Hackademic CMS Challenges (playground.kontinuagroup.com, id=1, class_id=1). Fecha límite y entrega: por confirmar.
 
+### 2026-10-09 - Clase (vie)
+- Para sáb 10-oct: llevar instalada la herramienta del enlace del chat de Teams (Windows). Pendiente: confirmar cuál es.
+
 ## Sin clasificar
 
 ### 2026-10-04 - Avance entrega 1

@@ -8,6 +8,15 @@ Tareas, fechas y entregas van en `board.md`. Clases recientes arriba.
 
 ---
 
+## 2026-10-09 - Clase (vie)
+
+**Notas:**
+- Dicta: Manuel Humberto Santander Peláez (virtual, Teams con transcripción).
+- Cierre lección 1 (ciclo DevSecOps, final): cuidar secretos e información de autenticación que se pueda fugar; al generar despliegues revisar vulnerabilidades de contenedores y artefactos de despliegue; implementar; operar parchando seguridad; monitorear la operación.
+- Tarea para mañana (sáb 10-oct): llegar con una herramienta instalada (enlace para Windows que el profe puso en el chat de Teams; no quedó en la transcripción). Se trabaja en la sesión.
+
+---
+
 ## 2026-10-02 - Clase (vie)
 
 **Notas:**
