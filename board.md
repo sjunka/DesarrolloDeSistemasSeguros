@@ -22,7 +22,7 @@ Otros equipos:
 
 | # | Nombre | Fecha | Peso | Entrega por | Estado |
 |---|--------|-------|------|-------------|--------|
-| 1 | Hackademic CMS - retos 1,2,5,6,7,10 (paso a paso) | por confirmar | por confirmar | por confirmar | Resuelto + evidencia (listo entregar) |
+| 1 | Hackademic CMS - retos 1,2,5,6,7,10 (paso a paso) | por confirmar | por confirmar | Brightspace (individual) | PDF listo para subir a Brightspace: `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` |
 
 Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 
@@ -45,3 +45,8 @@ Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 - Respuestas: R1 correo `Friday13@JasonLives.com`; R2 clave `enter a coin to play`; R5 User-Agent `p0wnBrowser`; R6 codigo `easyyyyyyy!`; R7 info disclosure `index_files/lastlogin.txt` -> usuario `Irene` -> notas privadas (broken access control; la cookie es senuelo); R10 `LetMeIn=True` -> serial `TRVN-67Q2-RU98-546F-H1ZT`.
 - Sitio en vivo: https://sjunka.github.io/DesarrolloDeSistemasSeguros/#/reto/01
 - Pendiente: confirmar con el profe fecha/peso/canal de entrega y nombre de equipo.
+
+### 2026-10-09 - Entrega 1 PDF finalizada (individual)
+- PDF de bitácora listo: `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` (14 págs, 6 hallazgos con evidencia).
+- Reto 1: agregada la evidencia que faltaba, capturada en vivo del playground (solo lectura): `view-source` de `ch001/index.php` con `white, rabbit` en `color="#FFFFFF"` (blanco sobre blanco, línea 30) y el listado de directorios de `secret_area_/` (mails.gif, mails.txt). Capturas en `app/public/img/reto01/04-fuente-credenciales.png` y `05-listado-secret-area.png`; pies corregidos (la portada renderizada no muestra las credenciales).
+- Modalidad confirmada: **individual**, entrega por **Brightspace**. Pendiente solo: subirlo a Brightspace y confirmar fecha/peso.

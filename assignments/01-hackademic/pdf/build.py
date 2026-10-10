@@ -18,7 +18,7 @@ def recorte(src):
     im = Image.open(IMG / src).convert("RGB")
     box = ImageChops.difference(im, Image.new("RGB", im.size, (255, 255, 255))).getbbox()
     if box: im = im.crop((max(box[0]-12, 0), max(box[1]-12, 0), min(box[2]+12, im.width), min(box[3]+12, im.height)))
-    im.save(out); return out.as_uri()
+    im.save(out); return out.as_uri(), im.height / im.width
 
 def li(xs): return "<ul>" + "".join(f"<li>{x}</li>" for x in xs) + "</ul>"
 
@@ -31,7 +31,9 @@ def reto(r):
             if s.get("e"): p += f"<p class='e'>{s['e']}</p>"
             if s.get("c"): p += f"<pre>{s['c']}</pre>"
             for im in s.get("img", []):
-                p += f"<figure><img src='{recorte(im['src'])}'><figcaption>Evidencia: {im.get('cap','')}</figcaption></figure>"
+                uri, ratio = recorte(im['src'])
+                cls = " class='tall'" if ratio > 0.8 else ""
+                p += f"<figure><img{cls} src='{uri}'><figcaption>Evidencia: {im.get('cap','')}</figcaption></figure>"
             pasos.append(p + "</div>")
     return f"""<section class='reto'>
 <h2>H-{r['id']} · {r['name']}: {r['sub']}</h2>
@@ -58,7 +60,7 @@ table {{ border-collapse:collapse; width:100%; font-size:9pt; }} th,td {{ border
 th {{ background:#f3f3f3; }} .meta th {{ width:28%; }}
 code,pre {{ font-family: Menlo, monospace; font-size:8.5pt; background:#f5f5f5; }} pre {{ padding:4px 6px; white-space:pre-wrap; margin:3px 0; }}
 .e {{ color:#555; font-style:italic; margin:2px 0; }} .paso p {{ margin:3px 0; }} ul {{ margin:2px 0; padding-left:18px; }}
-figure {{ margin:4px 0 8px; break-inside:avoid; }} img {{ max-width:100%; max-height:85mm; border:1px solid #bbb; display:block; }}
+figure {{ margin:4px 0 8px; break-inside:avoid; }} img {{ max-width:100%; max-height:90mm; border:1px solid #bbb; display:block; }} img.tall {{ max-height:165mm; }}
 figcaption {{ font-size:8pt; color:#555; }} .reto {{ margin-top:14px; }} h2,h3,h4 {{ break-after:avoid; }} .muted {{ color:#666; font-size:9pt; }}
 </style>
 <h1>Bitácora de pruebas de seguridad web</h1>

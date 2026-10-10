@@ -8,7 +8,7 @@
   "lead": "<em>\"Our agents informed us that there is reasonable suspicion that the site of this Logistics Company is a blind for a human organs smuggling organisation. Your objective is to find the missing agent's email address.\"</em> Sitio de la \"Greek Logistics Company\". Hay que entrar y hallar el correo del agente desaparecido.",
   "why": "Primera leccion del hacking web: <b>lo que el navegador recibe, el atacante lo lee todo</b>. Credenciales en la pagina, imagenes que apuntan a carpetas y archivos servidos sin control no estan protegidos: solo estan fuera de la vista. Antes de forzar nada, <em>leer la fuente y seguir cada recurso</em> (la pista \"white rabbit\": seguir al conejo).",
   "recon": [
-    "Ver la portada: las credenciales <code>white, rabbit</code> estan escritas en la propia pagina.",
+    "Leer el codigo fuente de la portada (Ctrl+U): las credenciales <code>white, rabbit</code> estan escritas en blanco sobre fondo blanco, invisibles al renderizar.",
     "Tras entrar, inspeccionar cada imagen: una apunta a una carpeta oculta.",
     "Probar esa carpeta directamente (listado de directorios activo)."
   ],
@@ -16,7 +16,7 @@
     {
       "h": "1. Entrar con las credenciales de la fuente",
       "steps": [
-        { "t": "En la portada estan visibles usuario y clave: <code>white</code> / <code>rabbit</code>.", "e": "Credenciales en texto plano en la pagina. Es <b>seguridad por oscuridad</b>: esconder el secreto no lo protege.", "c": "usuario: white   ·   clave: rabbit", "img": [{ "src": "reto01/01-landing.png", "cap": "Portada de Greek Logistics Company con las credenciales white/rabbit a la vista" }] },
+        { "t": "La portada no muestra credenciales a simple vista: solo el formulario de login. Al abrir el codigo fuente (Ctrl+U / view-source) aparecen en la linea 30, escritas en <b>blanco sobre fondo blanco</b> (<code>color=\"#FFFFFF\"</code>): usuario <code>white</code>, clave <code>rabbit</code>.", "e": "Credenciales en texto plano en el HTML, apenas ocultas con el color del texto. Es <b>seguridad por oscuridad</b>: esconderlas a la vista no las protege, porque todo lo que llega al navegador se lee en la fuente.", "c": "usuario: white   ·   clave: rabbit", "img": [{ "src": "reto01/01-landing.png", "cap": "Portada de Greek Logistics Company: el login tal como se ve; las credenciales no aparecen en la pagina renderizada." }, { "src": "reto01/04-fuente-credenciales.png", "cap": "view-source de ch001/index.php (linea 30 resaltada): las credenciales <code>white, rabbit</code> van con color de texto #FFFFFF (blanco) sobre fondo blanco; por eso son invisibles al renderizar." }] },
         { "t": "Enviar el formulario y pasar al area segura (frames con el menu de la empresa)." }
       ]
     },
@@ -24,7 +24,7 @@
       "h": "2. Seguir al conejo hasta la lista de correos",
       "steps": [
         { "t": "Abrir <code>mails.php</code> (Special Clients' Mailbox): tiene una imagen unica <code>./secret_area_/mails.gif</code>.", "e": "Inspeccionando la imagen se ve que vive en la carpeta <code>secret_area_/</code>. Esa ruta es la pista oculta.", "img": [{ "src": "reto01/02-mailbox.png", "cap": "Buzon con la imagen que delata la carpeta secret_area_/" }] },
-        { "t": "Abrir la carpeta <code>main/secret_area_/</code>: el servidor lista su contenido y expone <code>mails.txt</code>.", "e": "Listado de directorios activado (mala configuracion): deja ver y descargar archivos no enlazados.", "c": "https://playground.kontinuagroup.com/challenges/ch001/main/secret_area_/" },
+        { "t": "Abrir la carpeta <code>main/secret_area_/</code>: el servidor (Apache) lista su contenido y expone <code>mails.txt</code>.", "e": "Listado de directorios activado (mala configuracion): deja ver y descargar archivos no enlazados.", "c": "https://playground.kontinuagroup.com/challenges/ch001/main/secret_area_/", "img": [{ "src": "reto01/05-listado-secret-area.png", "cap": "Listado de directorios de secret_area_/: Apache expone mails.gif y mails.txt sin control de acceso." }] },
         { "t": "En <code>mails.txt</code> esta la lista; el agente es el de cumpleanos viernes 13: <b>Friday13@JasonLives.com</b> (\"Jasson Killer\", referencia a Jason / viernes 13).", "e": "Respuesta del reto: <code>Friday13@JasonLives.com</code>. El mensaje final se envia desde <code>Diaxirisths.php</code> (Central Communication Panel).", "img": [{ "src": "reto01/03-emails.png", "cap": "mails.txt: el agente desaparecido es Friday13@JasonLives.com" }] }
       ]
     }
