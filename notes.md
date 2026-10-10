@@ -15,6 +15,15 @@ Tareas, fechas y entregas van en `board.md`. Clases recientes arriba.
 - Repaso: hace 8 días vimos los 7 pasos para que se materialice un incidente.
 - Tácticas = categorías de acciones del atacante; técnicas = acciones particulares dentro de cada categoría.
 - Persistencia: cualquier cosa que el atacante haga en un equipo para mantener acceso. Puede quedarse meses sin que uno se entere.
+- Nube (IaaS): región con zonas de disponibilidad (cómputo, almacenamiento, BD, networking); encima van servicios SaaS/PaaS/IaaS. Si me hackean, AWS/Azure no responde por los datos de mis clientes. En IaaS yo protejo datos de clientes, plataformas, aplicaciones e IAM.
+- Todo software de base, sin excepción, debe tener línea base de seguridad y paquetes actualizados.
+- Librerías: el 99% de las veces se bajan de GitHub. Riesgo de cadena de suministro.
+- Video (min 28-32) sobre fallos recientes:
+  - RCE en servidores de GitHub agregando una cabecera en un push (reportado por la empresa Wiz, ya corregido).
+  - Acceso no autorizado a ~3.800 repos internos de GitHub: un desarrollador instaló una versión alterada de una extensión de VS Code (Angular / Nx Console, manejador de monorepos) que robaba el GitHub token. ~28 instalaciones de la versión maliciosa. La extensión no es maliciosa, solo esa versión.
+  - Paquetes con hooks que envían credenciales (GitHub) desde los repos donde se instalan.
+  - Vulnerabilidades de años en software base salen a la luz; zero-day reportado en Nginx.
+  - Lección: secrets en el repo + token del desarrollador = acceso a infraestructura y CI/CD.
 - DevSecOps: CI/CD como ciclo infinito. Desarrollo = planear, codificar, construir, probar. Operación = release, implementar, operar, monitorear. Seguridad en cada etapa:
   - Planear: modelado de amenazas (desde mañana en detalle, modelo básico). Un análisis completo puede dar 500.000-1.000.000 escenarios de riesgo, inmanejable; enfocarse en los más críticos deja el riesgo razonablemente controlado. De las amenazas salen los requerimientos (la otra semana, incluye temas de IA). También planificación organizacional para integrar el proceso de punta a punta.
   - Codificar: gestión de información sensible (secrets, que no se filtren usuarios y contraseñas), pruebas estáticas, lineamientos de seguridad por framework.
