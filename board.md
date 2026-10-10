@@ -22,7 +22,7 @@ Otros equipos:
 
 | # | Nombre | Fecha | Peso | Entrega por | Estado |
 |---|--------|-------|------|-------------|--------|
-| 1 | Hackademic CMS - retos 1,2,5,6,7,10 (paso a paso) | por confirmar | por confirmar | Brightspace (individual) | PDF listo para subir a Brightspace: `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` |
+| 1 | Hackademic CMS - retos 1,2,5,6,7,10 (paso a paso) | por confirmar | por confirmar | Brightspace (individual) | Entregado (2026-10-09, Brightspace): `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` |
 
 Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 
@@ -49,4 +49,4 @@ Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 ### 2026-10-09 - Entrega 1 PDF finalizada (individual)
 - PDF de bitácora listo: `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` (14 págs, 6 hallazgos con evidencia).
 - Reto 1: agregada la evidencia que faltaba, capturada en vivo del playground (solo lectura): `view-source` de `ch001/index.php` con `white, rabbit` en `color="#FFFFFF"` (blanco sobre blanco, línea 30) y el listado de directorios de `secret_area_/` (mails.gif, mails.txt). Capturas en `app/public/img/reto01/04-fuente-credenciales.png` y `05-listado-secret-area.png`; pies corregidos (la portada renderizada no muestra las credenciales).
-- Modalidad confirmada: **individual**, entrega por **Brightspace**. Pendiente solo: subirlo a Brightspace y confirmar fecha/peso.
+- Modalidad confirmada: **individual**, entrega por **Brightspace**. **Entregado el 2026-10-09 por Brightspace.** Pendiente solo: confirmar fecha/peso con el profe.
