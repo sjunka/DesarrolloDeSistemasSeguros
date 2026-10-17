@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Shim minimo de WPF: solo los tipos que ThreatModeling.*.dll usa al abrir y procesar un modelo. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+  <!-- WindowsBase debe ser este shim y no la fachada que trae .NET. -->
+  <Target Name="DropFrameworkWindowsBase" AfterTargets="ResolveTargetingPackAssets">
+    <ItemGroup><Reference Remove="@(Reference)" Condition="'%(Reference.FileName)' == 'WindowsBase'" /></ItemGroup>
+  </Target>
+</Project>
