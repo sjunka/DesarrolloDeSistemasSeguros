@@ -23,6 +23,7 @@ Otros equipos:
 | # | Nombre | Fecha | Peso | Entrega por | Estado |
 |---|--------|-------|------|-------------|--------|
 | 1 | Hackademic CMS - retos 1,2,5,6,7,10 (paso a paso) | por confirmar | por confirmar | Brightspace (individual) | Entregado (2026-10-09, Brightspace): `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` |
+| 2 | Vulnerabilidades de un marketplace (Silk Road vs Coupang), PDF de 2 págs | por confirmar | por confirmar | por confirmar | Hecho (PDF listo, 2026-10-16): `assignments/02-marketplace/Entrega2-Marketplace-Junca.pdf`. Falta confirmar si es entrega oficial y el canal |
 
 Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 
@@ -50,3 +51,7 @@ Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 - PDF de bitácora listo: `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` (14 págs, 6 hallazgos con evidencia).
 - Reto 1: agregada la evidencia que faltaba, capturada en vivo del playground (solo lectura): `view-source` de `ch001/index.php` con `white, rabbit` en `color="#FFFFFF"` (blanco sobre blanco, línea 30) y el listado de directorios de `secret_area_/` (mails.gif, mails.txt). Capturas en `app/public/img/reto01/04-fuente-credenciales.png` y `05-listado-secret-area.png`; pies corregidos (la portada renderizada no muestra las credenciales).
 - Modalidad confirmada: **individual**, entrega por **Brightspace**. **Entregado el 2026-10-09 por Brightspace.** Pendiente solo: confirmar fecha/peso con el profe.
+
+### 2026-10-16 - PDF de marketplace (2 págs)
+- `assignments/02-marketplace/Entrega2-Marketplace-Junca.pdf`: Silk Road (2011-2014) vs Coupang (2025-2026), 5 puntos de falla, controles con trade-offs, referencias APA 7. Fuente `pdf/marketplace.html`, build con `python3 pdf/build.py`.
+- Pendiente: confirmar con el profe si es entrega oficial, fecha, peso y canal (README de la carpeta lista lo que no quedó verificado).

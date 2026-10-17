@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de defensa: vulnerabilidades de un marketplace</title>
+<style>
+:root{--bg:#fff;--ink:#14171c;--muted:#5b6470;--line:#d9dde2;--soft:#f5f6f8;--red:#b3261e;--redsoft:#fbeceb;--sr:#2b2f36;--cp:#14508c;--ok:#1b6e3c;--warn:#8a5a00;}
+@media (prefers-color-scheme:dark){:root{--bg:#14171c;--ink:#e8eaee;--muted:#9aa3af;--line:#2d333b;--soft:#1c2128;--red:#ff7b72;--redsoft:#2a1a1a;--sr:#aab2bd;--cp:#79b8ff;--ok:#56d364;--warn:#e3b341;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 60px}
+header{padding:28px 0 12px;border-bottom:2px solid var(--ink)}
+.k{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--red);font-weight:700}
+h1{font-size:28px;line-height:1.15;margin:4px 0}
+h2{font-size:21px;margin:34px 0 8px;padding-top:6px;border-top:1px solid var(--line)}
+h3{font-size:16px;margin:16px 0 4px}
+p{margin:6px 0}
+.sub{color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+nav a{font-size:13px;padding:3px 10px;border:1px solid var(--line);border-radius:99px;color:var(--ink);text-decoration:none}
+nav a:hover{border-color:var(--red)}
+ul{list-style:none;padding:0;margin:6px 0}
+ul li{padding-left:1.1em;position:relative;margin:3px 0}
+ul li::before{content:"-";position:absolute;left:0;color:var(--muted)}
+.box{background:var(--soft);border-left:4px solid var(--red);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+.say{background:var(--redsoft);border-left:4px solid var(--red);padding:10px 14px;margin:8px 0;border-radius:0 6px 6px 0}
+.say b:first-child{color:var(--red)}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--soft)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.s{color:var(--ok)}.d{color:var(--warn)}.i{color:var(--red)}
+details{border:1px solid var(--line);border-radius:6px;margin:6px 0;padding:0 12px}
+summary{cursor:pointer;font-weight:600;padding:9px 0}
+details[open] summary{border-bottom:1px solid var(--line);margin-bottom:6px}
+details.hide{display:none}
+#q{width:100%;padding:9px 12px;font-size:16px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+button{font:inherit;padding:7px 14px;border-radius:6px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer}
+button:hover{background:var(--soft)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.row label{font-size:14px}
+input[type=number]{width:80px;padding:5px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink)}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.res div{border:1px solid var(--line);border-radius:6px;padding:8px}
+.res b{display:block;font-size:20px}
+.bad{color:var(--red)}.good{color:var(--ok)}
+pre{background:var(--soft);padding:10px;border-radius:6px;overflow:auto;font:13px/1.4 ui-monospace,Menlo,Consolas,monospace}
+dt{font-weight:700;margin-top:8px}dd{margin:0 0 4px}
+.c1{color:var(--sr);font-weight:700}.c2{color:var(--cp);font-weight:700}
+@media print{nav,#q,.row,button{display:none}details{display:block}details>*{display:block}}
+</style>
+</head>
+<body><div class="wrap">
+<header>
+  <div class="k">Guía de defensa · offline</div>
+  <h1>Vulnerabilidades de un marketplace: Silk Road frente a Coupang</h1>
+  <p class="sub">Para responder preguntas sobre el PDF (<code>Entrega2-Marketplace-Junca.pdf</code>). Cada dato lleva su nivel de certeza.</p>
+  <nav><a href="#pitch">Pitch</a><a href="#puntos">5 puntos</a><a href="#casos">Casos</a><a href="#sim">Simulador</a><a href="#qa">Preguntas</a><a href="#cifras">Cifras</a><a href="#certeza">Certeza</a><a href="#glosario">Glosario</a><a href="#fuentes">Fuentes</a></nav>
+  <p><span class="tag s">Sólido</span> fuente primaria o regulador · <span class="tag d">Disputado</span> versiones en conflicto · <span class="tag i">Mi inferencia</span> análisis del PDF, no hecho publicado</p>
+</header>
+
+<h2 id="pitch">1. Qué decir</h2>
+<div class="say"><b>30 segundos.</b> Un marketplace custodia dinero y datos de otros, así que vive de la confianza. Comparé Silk Road (2013) con Coupang (2025). Doce años y mundos distintos, pero el fallo es parecido: no se rompió criptografía, falló la gestión. Una validación que se podía repetir, un servidor mal configurado, una llave que nadie revocó.</div>
+<div class="say"><b>2 minutos, en 5 pasos.</b>
+<ol><li>Mapa: cinco puntos donde se rompe un marketplace (login, pagos, servidores y llaves, personas, monitoreo).</li>
+<li>Silk Road: exploit de retiros (2012), IP del servidor expuesta (2013), operador con rastros.</li>
+<li>Coupang: llave de firma de un exingeniero no revocada, tokens falsos, meses sin detección, multa récord.</li>
+<li>Tabla: mismo punto de falla en cada época y qué control lo cierra, con su trade-off.</li>
+<li>Cierre: lista de "llaves maestras" con dueño, caducidad y alerta.</li></ol></div>
+
+<h2 id="puntos">2. Los cinco puntos, explicados</h2>
+<h3>1. Una sola validación crítica (A06 Diseño inseguro · integridad)</h3>
+<p><b>Idea:</b> el sistema confía en un único chequeo. Si se puede repetir o falsificar, todo cae.</p>
+<ul><li><span class="c1">Silk Road:</span> más de 140 retiros en rápida sucesión hicieron que el sistema pagara más de lo depositado. SR2 confirmaba pagos solo por ID de transacción.</li>
+<li><span class="c2">Coupang:</span> el token se aceptaba solo por su firma. Con la llave, se abría cualquier cuenta.</li>
+<li><b>Analogía:</b> cinco cajeros preguntan el saldo a la vez y ninguno ve que otro ya pagó. O un sello notarial: quien roba el sello firma lo que quiera.</li>
+<li><b>Control:</b> retiros atómicos, pruebas de concurrencia, token validado también contra una sesión en el servidor. <b>Trade-off:</b> latencia y complejidad.</li></ul>
+<h3>2. Cuentas falsas o suplantadas (A07 · confidencialidad)</h3>
+<ul><li>SR: registro abierto, sin invitación; el exploit usó al menos nueve cuentas falsas.</li>
+<li>Coupang: con tokens falsos el atacante entra como cliente legítimo, sin login.</li>
+<li><b>Control:</b> rate limit por cuenta e IP, WAF, fail2ban (clase 3-oct), tope de retiro a cuentas nuevas, MFA. <b>Trade-off:</b> fricción para usuarios legítimos.</li></ul>
+<h3>3. Secretos y configuración (A02, A04 · confidencialidad)</h3>
+<ul><li>SR: servidor alcanzable fuera de Tor. FBI dice que por el CAPTCHA; críticos dicen que por una página de PHPMyAdmin. En ambos casos: mala configuración. <span class="tag d">Disputado</span></li>
+<li>Coupang: la llave de firma no se renovó ni revocó de inmediato al salir el ingeniero.</li>
+<li><b>Control:</b> línea base, paneles admin fuera de Internet, gestor de secretos con rotación, revocación el día de la baja. <b>Trade-off:</b> exige automatizar o se cierran sesiones.</li></ul>
+<h3>4. Personas con acceso (gobierno · confidencialidad)</h3>
+<ul><li>SR: alias "altoid", pero Gmail y Stack Overflow con nombre real.</li>
+<li>Coupang: exempleado conocía las fallas de la autenticación que ayudó a construir.</li>
+<li><b>Control:</b> mínimo privilegio, segregación de funciones, baja verificada. <b>Trade-off:</b> más procesos.</li></ul>
+<h3>5. Detectar y responder (A09 · trazabilidad)</h3>
+<ul><li>SR: el operador supo de la fuga de IP después de un DDoS (mar. 2013).</li>
+<li>Coupang: meses sin detección (abr.-nov. 2025 según el Ministerio); avisaron clientes; notificación tardía; unos cinco meses de logs borrados pese a orden de conservación.</li>
+<li><b>Control:</b> alertas por volumen anómalo por token, logs inmutables, plan de respuesta con notificación (SIC, Ley 1581; GDPR 72 h, según clase). <b>Trade-off:</b> costo y falsos positivos.</li></ul>
+<div class="box"><b>Si preguntan por qué esos códigos OWASP:</b> es mi clasificación, no un mapeo oficial. Uso OWASP Top 10:2025. En la edición 2021, Diseño inseguro era A04 y Configuración incorrecta A05 (como en tu Entrega 1). <span class="tag i">Mi inferencia</span></div>
+
+<h2 id="casos">3. Los casos en detalle</h2>
+<h3 class="c1">Silk Road y SR2</h3>
+<table><tr><th>Cuándo</th><th>Qué</th><th>Certeza</th></tr>
+<tr><td>2011</td><td>Operador promociona como "altoid" y deja un Gmail con su nombre real (Aegerter, 2013).</td><td><span class="tag s">Sólido</span></td></tr>
+<tr><td>Sep. 2012</td><td>James Zhong, al menos 9 cuentas falsas (depósitos de 200 a 2.000 BTC cada una), más de 140 transacciones en rápida sucesión, más de 50.000 BTC (Amick, 2022). Ejemplo del DOJ: 500 BTC depositados, cinco retiros de 500 en segundos (The Block, 2023).</td><td><span class="tag s">Sólido</span></td></tr>
+<tr><td>Mar.-may. 2013</td><td>Bitácora de Ulbricht: IP filtrada, DDoS, migra de servidor (Tarbell, 2014, nota 5).</td><td><span class="tag s">Sólido</span></td></tr>
+<tr><td>Jun. 2013</td><td>FBI ubica el servidor en un data center de Islandia y pide ayuda a las autoridades islandesas (Tarbell, 2014).</td><td><span class="tag d">Disputado</span> cómo lo halló</td></tr>
+<tr><td>1-2 oct. 2013</td><td>Arresto de Ulbricht y cierre del sitio. Condenado por siete cargos, cadena perpetua en 2015, indultado en enero de 2025 (Al Jazeera, 2025).</td><td><span class="tag s">Sólido</span></td></tr>
+<tr><td>Feb. 2014</td><td>SR2 anuncia pérdida de unos 4.474 BTC. Su administrador "Defcon" lo atribuye a confirmar pagos solo por ID (Biggs, 2014).</td><td><span class="tag d">Versión del admin</span></td></tr></table>
+<h3 class="c2">Coupang</h3>
+<table><tr><th>Cuándo</th><th>Qué</th><th>Certeza</th></tr>
+<tr><td>Nov. 2024</td><td>Sale un ingeniero que desarrolló parte de la autenticación; su llave de firma no se invalida de inmediato.</td><td><span class="tag s">Ministerio, Reuters</span></td></tr>
+<tr><td>Abr.-nov. 2025</td><td>Según el Ministerio, fabrica tokens falsos y entra a cuentas. Coupang dice que un programa suyo hizo unos 140 millones de consultas.</td><td><span class="tag d">Alcance discutido</span></td></tr>
+<tr><td>Nov. 2025</td><td>Clientes reciben correos amenazantes. Coupang informó al CISO el 17 y a las autoridades el 19, más de 53 h después; el plazo es 24 h.</td><td><span class="tag s">Reuters, PIPC</span></td></tr>
+<tr><td>Feb. 2026</td><td>Ministerio: "más un problema de gestión que un ataque avanzado" (traducción mía).</td><td><span class="tag s">Reuters</span></td></tr>
+<tr><td>Jun. 2026</td><td>PIPC multa 624.681 millones de wones (unos US$409 M). Seis infracciones: medidas de seguridad, recolección sin base legal, destrucción de datos, notificación, independencia del oficial de datos, obstrucción.</td><td><span class="tag s">PIPC</span></td></tr></table>
+<p><b>Si preguntan por "24 de junio":</b> es la fecha inicial que dio Coupang al principio; el Ministerio habló de abril. Usé la del Ministerio.</p>
+<p><b>Después:</b> Coupang anunció un plan de compensación de 1,685 billones de wones con vales de 50.000 wones por cliente (BleepingComputer). Dice que el exempleado conservó datos de unas 3.000 cuentas, ya borrados.</p>
+
+<h2 id="sim">4. Simulador: condición de carrera</h2>
+<p>Didáctico. El mecanismo interno de Silk Road no es público: esto muestra el patrón, no el código real. Por defecto reproduce el ejemplo del DOJ (500 BTC, cinco retiros de 500).</p>
+<div class="row">
+<label>Saldo <input type="number" id="s0" value="500" min="1"></label>
+<label>Monto <input type="number" id="m" value="500" min="1"></label>
+<label>Retiros simultáneos <input type="number" id="n" value="5" min="1" max="50"></label>
+</div>
+<div class="row">
+<label><input type="radio" name="md" value="0" checked> A: leer saldo, comparar y luego restar (pasos separados)</label>
+<label><input type="radio" name="md" value="1"> B: comprobar y restar en una sentencia atómica</label>
+<button id="go">Disparar</button>
+</div>
+<div class="res"><div>Pagado<b id="r1">-</b></div><div>Saldo final<b id="r2">-</b></div><div>Ganancia neta<b id="r3">-</b></div><div>Aprobados<b id="r4">-</b></div></div>
+<p id="r5"></p>
+<pre>-- B (seguro)
+UPDATE cuentas SET saldo = saldo - :monto
+ WHERE id = :id AND saldo >= :monto;
+-- 0 filas afectadas: rechazar. Red de seguridad: CHECK (saldo >= 0)</pre>
+
+<h2 id="qa">5. Preguntas probables</h2>
+<div class="row"><input id="q" placeholder="Buscar en las preguntas..."><button id="rnd">Pregunta al azar</button></div>
+
+<details><summary>¿Por qué comparar un mercado criminal con una empresa legítima?</summary>
+<p>Porque cambia todo menos el tipo de fallo, y eso apunta a la causa, no al contexto. Lo que cambia es la factura: cierre y arresto frente a una multa de unos US$409 M. Límite: los modelos de amenaza difieren (en Silk Road el adversario era la policía; en Coupang, un exempleado y el regulador).</p></details>
+<details><summary>¿Fue realmente una "condición de carrera"?</summary>
+<p>El DOJ describe más de 140 transacciones en rápida sucesión que engañaron al sistema de retiros. "Condición de carrera" es la interpretación técnica habitual, pero el mecanismo exacto no es público. Dilo así. <span class="tag i">Mi inferencia</span></p></details>
+<details><summary>¿Qué es la maleabilidad de transacciones?</summary>
+<p>En Bitcoin (antes de SegWit) alguien podía alterar la codificación de una transacción y cambiar su ID sin cambiar el pago. Si el sitio confirma pagos solo por ID, puede creer que un retiro falló y repetirlo. Es la explicación de Defcon, administrador de SR2, no un hallazgo independiente.</p></details>
+<details><summary>¿Cómo encontró el FBI el servidor? ¿Se rompió Tor?</summary>
+<p>Versión del FBI (Tarbell, 2014): el login con CAPTCHA filtraba la IP real porque no estaba bien configurado para Tor. Críticos (Weaver, citado por Schneier, 2014): los logs muestran que el FBI contactó la IP directamente y obtuvo una página de PHPMyAdmin; queda abierta cómo supo esa IP. Ambas versiones implican un servidor alcanzable fuera de Tor. <span class="tag d">Disputado</span></p></details>
+<details><summary>¿Por qué una llave de firma abre todas las cuentas?</summary>
+<p>Un token de sesión lleva la firma del servidor. Si el servidor solo verifica la firma, quien tiene la llave puede fabricar tokens válidos para cualquier usuario. Por eso la llave es una "llave maestra". El regulador (PIPC) dijo que fallar en gestionar las llaves podía permitir acceso a todas las cuentas.</p></details>
+<details><summary>¿Qué debió hacer Coupang?</summary>
+<p>Revocar o rotar la llave al salir el ingeniero, validar el token también contra una sesión en el servidor, alertar por volumen anómalo y notificar a tiempo. Afirmar que "habría activado la revocación" es contrafáctico mío. <span class="tag i">Mi inferencia</span></p></details>
+<details><summary>¿Por qué dices que no fue criptografía?</summary>
+<p>Nadie rompió un algoritmo. En Silk Road fallaron lógica de negocio y configuración; en Coupang, ciclo de vida de la llave. La cripto funcionó; la gestión no.</p></details>
+<details><summary>¿La multa a Coupang es definitiva?</summary>
+<p>No. Coupang dijo que establecerá los hechos "por vías legales" tras recibir la resolución. También discute el alcance de la fuga.</p></details>
+<details><summary>¿Cuántas personas afectó Coupang? Vi 33,7 millones.</summary>
+<p>33,7 M fue la cifra inicial de cuentas. El PIPC cuenta 37,5 M personas: 33,22 M miembros y 4,33 M no miembros.</p></details>
+<details><summary>¿Por qué OWASP 2025 y no 2021?</summary>
+<p>2025 es la edición vigente. En la Entrega 1 usaste 2021; el PDF lo aclara en una nota.</p></details>
+<details><summary>¿Cómo se conecta con lo visto en clase?</summary>
+<ul><li>OWASP Top 10 y "confiar en el cliente" (Hackademic): aquí es "confiar en un solo punto".</li>
+<li>Propiedades: confidencialidad, integridad, disponibilidad, trazabilidad, no repudio.</li>
+<li>DevSecOps: planear (modelado de amenazas), codificar (secretos), probar, operar (monitoreo).</li>
+<li>ISO 31000: evitar, compartir, modificar, retener.</li>
+<li>WAF, rate limit, fail2ban; deber de notificar (SIC, Ley 1581; GDPR 72 h).</li>
+<li>Tokens de GitHub (9-oct): un secreto mal gestionado equivale a acceso a la infraestructura.</li></ul></details>
+<details><summary>¿Cómo aplicas ISO 31000 aquí?</summary>
+<ul><li><b>Evitar:</b> no custodiar fondos; que los retenga una pasarela regulada.</li><li><b>Compartir:</b> seguro cibernético y contrato con la pasarela.</li><li><b>Modificar:</b> los controles de la tabla.</li><li><b>Retener:</b> aceptar riesgo residual con topes, p. ej. límite diario de retiro.</li></ul></details>
+<details><summary>¿Por qué no usaste fuentes académicas?</summary>
+<p>Para incidentes concretos, la fuente primaria son documentos judiciales, comunicados y reguladores; la academia llega después. Si piden refuerzo: Christin (2013), "Traveling the Silk Road: A measurement analysis of a large anonymous online marketplace" (WWW 2013, arXiv 1207.7139). Mide el mercado, no sus vulnerabilidades; verifica la referencia antes de citarla.</p></details>
+<details><summary>¿Qué limitaciones tiene tu análisis?</summary>
+<ul><li>Dos casos; no generaliza a todo marketplace.</li><li>Fuentes periodísticas y judiciales; el comunicado del DOJ bloqueó la descarga, así que verifiqué el exploit de Zhong en Bitcoin Magazine y The Block.</li><li>Hechos disputados en ambos casos.</li><li>Clasificación OWASP y etapas DevSecOps son mías.</li><li>No investigué un caso colombiano.</li></ul></details>
+<details><summary>¿Qué haces si no sabes la respuesta?</summary>
+<p>Di qué sabes, qué fuente lo respalda y qué no verificaste. "No lo verifiqué; mi fuente es X" suma credibilidad.</p></details>
+<details><summary>¿El SQL es lo que usaba Silk Road?</summary>
+<p>No. Es un ejemplo de defensa. La sentencia comprueba y resta a la vez; la base bloquea la fila, así dos retiros simultáneos se serializan. Para flujos con pagos externos se añade una clave de idempotencia y se descuenta antes de enviar.</p></details>
+
+<h2 id="cifras">6. Cifras y fechas</h2>
+<table><tr><th>Dato</th><th>Valor</th><th>Fuente</th></tr>
+<tr><td>Exploit de retiros</td><td>Más de 50.000 BTC, sep. 2012</td><td>Amick, 2022; The Block, 2023</td></tr>
+<tr><td>Valor del decomiso</td><td>Más de US$3.360 M (precio de 2021, no de 2012)</td><td>Amick, 2022</td></tr>
+<tr><td>Pena de Zhong</td><td>Un año y un día; recuperados ~50.500 BTC</td><td>The Block, 2023</td></tr>
+<tr><td>SR2 hack</td><td>~4.474 BTC (~US$2,7 M), feb. 2014</td><td>Biggs, 2014</td></tr>
+<tr><td>Silk Road</td><td>Más de 1,5 M de transacciones, ~US$213 M (alegado)</td><td>Al Jazeera, 2025</td></tr>
+<tr><td>Coupang afectados</td><td>37,5 M (33,22 M + 4,33 M)</td><td>Lee, 2026</td></tr>
+<tr><td>Multa</td><td>624.681 M wones, ~US$409 M, 11-jun-2026</td><td>Lee, 2026; Gatlan, 2026</td></tr>
+<tr><td>Acceso</td><td>Abr.-nov. 2025 (Ministerio)</td><td>Yang y Jin, 2026</td></tr>
+<tr><td>Notificación</td><td>CISO 17-nov; autoridades 19-nov (+53 h); plazo 24 h</td><td>Yang y Jin, 2026</td></tr></table>
+
+<h2 id="certeza">7. Qué es sólido, disputado e inferencia</h2>
+<ul><li><span class="tag s">Sólido</span> declaración de Tarbell (2014), multa y hallazgos del PIPC, cifras de Zhong, fechas de arresto y cierre.</li>
+<li><span class="tag d">Disputado</span> cómo halló el FBI el servidor; causa del hack de SR2 (versión del admin); alcance real de la fuga de Coupang; inicio del acceso (24-jun según Coupang, abril según el Ministerio).</li>
+<li><span class="tag i">Mi inferencia</span> "condición de carrera"; mapeo OWASP; etapas DevSecOps; el SQL como defensa; "habría activado la revocación".</li></ul>
+
+<h2 id="glosario">8. Glosario rápido</h2>
+<dl>
+<dt>BTC</dt><dd>Unidad de bitcoin.</dd>
+<dt>Escrow</dt><dd>Dinero en custodia de la plataforma hasta que comprador y vendedor cumplen.</dd>
+<dt>Tor / hidden service</dt><dd>Red que oculta la IP; un servicio oculto (.onion) oculta también la del servidor, si está bien configurado.</dd>
+<dt>Fuga de IP</dt><dd>La IP real del servidor sale por una ruta fuera de Tor.</dd>
+<dt>PHPMyAdmin</dt><dd>Panel web para administrar bases MySQL. Expuesto, es una puerta.</dd>
+<dt>Condición de carrera</dt><dd>Dos operaciones tocan el mismo dato a la vez y el resultado depende del orden.</dd>
+<dt>Atomicidad / idempotencia</dt><dd>Todo o nada; repetir la misma solicitud no duplica el efecto.</dd>
+<dt>Token / llave de firma</dt><dd>Credencial de sesión firmada; la llave es el secreto que la firma.</dd>
+<dt>Rotar / revocar</dt><dd>Cambiar la llave periódicamente / invalidarla ya.</dd>
+<dt>Offboarding</dt><dd>Proceso de baja: retirar accesos y secretos.</dd>
+<dt>Mínimo privilegio, segregación de funciones</dt><dd>Solo el acceso necesario; nadie controla un proceso de punta a punta.</dd>
+<dt>WAF, rate limit, fail2ban</dt><dd>Filtro web, tope de solicitudes y bloqueo automático de IPs abusivas (clase 3-oct).</dd>
+<dt>PIPC / CISO / SIC</dt><dd>Regulador de datos coreano / jefe de seguridad de la información / Superintendencia de Industria y Comercio (Colombia).</dd>
+<dt>DDoS</dt><dd>Saturar un servidor con tráfico para tumbarlo.</dd>
+</dl>
+
+<h2 id="fuentes">9. Fuentes</h2>
+<ul>
+<li>Aegerter (2013), NBC News: nbcnews.com/news/world/end-silk-road-slip-ups-building-internet-drug-market-led-flna8C11326181</li>
+<li>Amick (2022), Bitcoin Magazine: bitcoinmagazine.com/markets/us-department-of-justice-seizes-over-3-billion-bitcoin</li>
+<li>Al Jazeera (22-ene-2025): aljazeera.com/economy/2025/1/22/trump-pardons-ross-ulbricht-creator-of-dark-web-marketplace-silk-road</li>
+<li>Biggs (2014), TechCrunch: techcrunch.com/2014/02/13/silk-road-2-hacked-88000-bitcoin-allegedly-stolen</li>
+<li>Gatlan (2026), BleepingComputer: bleepingcomputer.com/news/security/south-korea-hits-coupang-with-record-409-million-fine-over-data-breach/</li>
+<li>Lee (2026), Seoul Economic Daily: en.sedaily.com/technology/2026/06/11/coupang-hit-with-record-6246-billion-won-fine-over-data</li>
+<li>OWASP Top 10:2025: top10.owasp.org/2025/0x00_2025-Introduction</li>
+<li>Schneier (2014): schneier.com/blog/archives/2014/10/how_did_the_fed.html</li>
+<li>Tarbell (2014), declaración jurada: emptywheel.net/wp-content/uploads/2014/10/140905-Tarbell-Declaration.pdf</li>
+<li>Wilhelm (2023), The Block: theblock.co/post/226534/silk-road-hacker-sentenced</li>
+<li>Yang y Jin (2026), Reuters: finance.yahoo.com/news/south-korea-says-coupang-must-051616142.html</li>
+<li>Christin (2013), arXiv 1207.7139 (solo si piden respaldo académico; verificar antes de citar)</li></ul>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+function sim(s0,m,n,atomic){
+  let paid=0,bal=s0,ok=0;
+  if(atomic){for(let i=0;i<n;i++){if(bal>=m){bal-=m;paid+=m;ok++}}}
+  else{const seen=s0;for(let i=0;i<n;i++){if(seen>=m){paid+=m;ok++}}bal=s0-ok*m}
+  return{paid,bal,ok,net:paid-s0};
+}
+$("#go").onclick=()=>{
+  const s0=+$("#s0").value,m=+$("#m").value,n=+$("#n").value,a=document.querySelector("input[name=md]:checked").value==="1";
+  const r=sim(s0,m,n,a);
+  $("#r1").textContent=r.paid;$("#r2").textContent=r.bal;$("#r3").textContent=r.net;$("#r4").textContent=r.ok+" de "+n;
+  $("#r3").className=r.net>0?"bad":"good";$("#r2").className=r.bal<0?"bad":"good";
+  $("#r5").textContent=r.net>0?"Fraude: se pagó más de lo depositado.":"Sin pérdida: solo se pagó lo que había.";
+};
+const norm=t=>t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const ds=[...document.querySelectorAll("#qa ~ details")];
+$("#q").oninput=e=>{const v=norm(e.target.value);ds.forEach(d=>d.classList.toggle("hide",v&&!norm(d.textContent).includes(v)))};
+$("#rnd").onclick=()=>{ds.forEach(d=>{d.open=false;d.classList.remove("hide")});const d=ds[Math.floor(Math.random()*ds.length)];d.scrollIntoView({block:"center"});d.style.outline="2px solid var(--red)";setTimeout(()=>d.style.outline="",2500)};
+if(location.hash==="#selftest"){const a=sim(500,500,5,false),b=sim(500,500,5,true);document.title=(a.paid===2500&&a.net===2000&&b.paid===500&&b.net===0)?"selftest ok":"selftest FAIL"}
+</script>
+</body></html>
