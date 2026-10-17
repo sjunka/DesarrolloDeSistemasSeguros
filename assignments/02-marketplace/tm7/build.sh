@@ -1,5 +1,5 @@
 #!/bin/bash
-# Genera ../Entrega2-Marketplace-Junca.tm7 con el codigo real del Microsoft Threat Modeling Tool 7.3 y lo valida:
+# Genera ../Marketplace_SergioJunca.tm7 con el codigo real del Microsoft Threat Modeling Tool 7.3 y lo valida:
 # lo vuelve a abrir como lo hace la herramienta y deja una vista previa en preview.svg.
 # Requiere el SDK de .NET 8 (sin sudo: curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 8.0).
 # Uso: ./build.sh            genera y valida
@@ -16,5 +16,5 @@ H=harness/bin/Release/net8.0/harness
 [ -f "$CACHE/tmt/ThreatModeling.Model.dll" ] || "$H" "$CACHE" fetch
 
 if [ $# -gt 0 ]; then exec "$H" "$CACHE" open "$1" --list; fi
-"$H" "$CACHE" build ../Entrega2-Marketplace-Junca.tm7
-"$H" "$CACHE" preview ../Entrega2-Marketplace-Junca.tm7 preview.svg
+"$H" "$CACHE" build ../Marketplace_SergioJunca.tm7
+"$H" "$CACHE" preview ../Marketplace_SergioJunca.tm7 preview.svg

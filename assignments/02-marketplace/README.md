@@ -14,7 +14,7 @@ Estructura: idea central, 3 cifras, mapa de 5 puntos de falla, línea de tiempo 
 
 ### Modelo de amenazas (.tm7)
 
-`Entrega2-Marketplace-Junca.tm7`, para el Microsoft Threat Modeling Tool 7.3 (plantilla SDL TM Knowledge Base (Core) 4.1.0.11). Es el mapa del PDF como diagrama de flujo de datos:
+`Marketplace_SergioJunca.tm7`, para el Microsoft Threat Modeling Tool 7.3 (plantilla SDL TM Knowledge Base (Core) 4.1.0.11). Es el mapa del PDF como diagrama de flujo de datos:
 
 - Frontera de confianza "Plataforma del marketplace" con Login, Pagos, Servidores/llaves y Logs adentro. Comprador, Vendedor y Personal con acceso quedan afuera.
 - 13 flujos con nombre (HTTPS hacia los usuarios, Binary hacia la BD y los logs).
