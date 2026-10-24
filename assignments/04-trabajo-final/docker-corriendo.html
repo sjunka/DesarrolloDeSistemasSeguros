@@ -1,0 +1,59 @@
+<!doctype html><html lang="es"><head><meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Docker corriendo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#f5f7f9;--surface:#fff;--fg:#18212b;--muted:#5a6876;--line:#d9e0e7;--accent:#1f5f99;--ok:#1d7a46;--ok-bg:#e3f4ea;--code-bg:#0c1117;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",Menlo,monospace;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#11161c;--surface:#18202a;--fg:#e4eaf0;--muted:#9aa8b6;--line:#2b3643;--accent:#6aa9e6;--ok:#5cc98a;--ok-bg:#16301f;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--sans)}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 16px 64px;display:grid;gap:24px}
+.eyebrow{font:500 .78rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:1.8rem;margin:0}.lead{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:grid}
+.card .head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.card .head b{font-size:1.02rem}
+.badge{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--ok);background:var(--ok-bg);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.card img{width:100%;display:block;border-bottom:1px solid var(--line)}
+.card .meta{padding:10px 16px;font:.82rem var(--mono);color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card a{color:var(--accent);text-decoration:none}
+.term{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:16px 18px;overflow-x:auto}
+.term pre{margin:0;color:#d6dee8;font:.8rem/1.6 var(--mono);white-space:pre}
+footer{color:var(--muted);font-size:.82rem;border-top:1px solid var(--line);padding-top:16px}
+</style></head><body><div class="wrap">
+<header style="display:grid;gap:8px">
+  <div class="eyebrow">Trabajo final · SI6007 · laboratorio en vivo</div>
+  <h1>Docker corriendo</h1>
+  <p class="lead">Las cuatro aplicaciones del laboratorio activas en este equipo. Capturas tomadas en vivo de cada contenedor.</p>
+</header>
+
+<div class="grid">
+  <div class="card"><div class="head"><b>OWASP Juice Shop</b><span class="badge">Up · :3000</span></div>
+    <img src="img/js-home.png" alt="Juice Shop corriendo">
+    <div class="meta"><span>bkimminich/juice-shop</span><a href="http://localhost:3000" target="_blank">localhost:3000 ↗</a></div></div>
+
+  <div class="card"><div class="head"><b>DVWA</b><span class="badge">Up · :8080</span></div>
+    <img src="img/svc-dvwa.png" alt="DVWA login corriendo">
+    <div class="meta"><span>vulnerables/web-dvwa</span><a href="http://localhost:8080/login.php" target="_blank">localhost:8080 ↗</a></div></div>
+
+  <div class="card"><div class="head"><b>OWASP Mutillidae II</b><span class="badge">Up · :8081</span></div>
+    <img src="img/svc-mutillidae.png" alt="Mutillidae User Lookup corriendo">
+    <div class="meta"><span>citizenstig/nowasp · Sec 0</span><a href="http://localhost:8081/" target="_blank">localhost:8081 ↗</a></div></div>
+
+  <div class="card"><div class="head"><b>SonarQube 9.9 LTS</b><span class="badge">Up · :9000</span></div>
+    <img src="img/evidencia-sonarqube.png" alt="SonarQube corriendo">
+    <div class="meta"><span>sonarqube:lts-community</span><a href="http://localhost:9000" target="_blank">localhost:9000 ↗</a></div></div>
+</div>
+
+<section>
+  <div class="eyebrow" style="margin-bottom:8px">Salida real de <code>docker ps</code></div>
+  <div class="term"><pre>$ docker ps
+NAMES                   IMAGE                                              STATUS                 PORTS
+mutillidae              citizenstig/nowasp                                 Up 6 minutes           0.0.0.0:8081->80/tcp, [::]:8081->80/tcp
+juiceshop               bkimminich/juice-shop                              Up 17 minutes          0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+dvwa                    vulnerables/web-dvwa                               Up 17 minutes          0.0.0.0:8080->80/tcp, [::]:8080->80/tcp
+sonarqube               sonarqube:lts-community                            Up 2 hours             0.0.0.0:9000->9000/tcp, [::]:9000->9000/tcp</pre></div>
+</section>
+
+<footer>Desarrollo de Sistemas Seguros (SI6007) · EAFIT · Sergio Alfredo Junca Valero. Contenedores Docker del laboratorio, capturados en vivo el 2026-10-24.</footer>
+</div></body></html>

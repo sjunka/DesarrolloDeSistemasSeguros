@@ -25,6 +25,7 @@ Otros equipos:
 | 1 | Hackademic CMS - retos 1,2,5,6,7,10 (paso a paso) | por confirmar | por confirmar | Brightspace (individual) | Entregado (2026-10-09, Brightspace): `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` |
 | 2 | Vulnerabilidades de un marketplace (Silk Road vs Coupang), PDF de 2 págs | por confirmar | por confirmar | por confirmar | Hecho (PDF listo, 2026-10-16; .tm7 validado y listo para subir, 2026-10-17): `assignments/02-marketplace/Entrega2-Marketplace-Junca.pdf` y `Marketplace_SergioJunca.tm7`. Falta confirmar si es entrega oficial y el canal |
 | 3 | Juice Shop - vulnerabilidad del carrito para dejar la compra en 0 | por confirmar | por confirmar | por confirmar | Hecho (2026-10-23): PoC explotada en vivo (cantidad negativa en `PUT /api/BasketItems/:id`, pedido confirmado en 0.00). Entrega offline `assignments/03-juiceshop-carrito/final.html` con capturas. Falta confirmar si es entrega oficial y el canal |
+| 4 | Trabajo final - SQLi (manual+SQLMap), XSS, ZAP, SonarQube sobre DVWA/Mutillidae/Juice Shop | por confirmar | por confirmar | por confirmar | En curso (2026-10-24): evidencias reales ejecutadas en Docker (mismas apps que la VM). SQLi UNION DVWA, dump SQLMap `dvwa.users`, tarjetas Mutillidae, DOM XSS Juice Shop, ZAP scan, SonarQube DVWA (61 hotspots) + Mutillidae (116). Publicado: https://sjunka.github.io/eafit-trabajo-final-seguridad/ (+ `docker-corriendo.html`, `checklist-docker.html`). Pendiente: appliance 5 GB bajando para repetir en VMware; alert XSS DVWA. Guía en `material-md/Guia-trabajo-final-EAFIT.md` |
 
 Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 
@@ -35,6 +36,13 @@ Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 
 ### 2026-10-09 - Clase (vie)
 - Para sáb 10-oct: llevar instalada la herramienta del enlace del chat de Teams (Windows). Pendiente: confirmar cuál es.
+
+### 2026-10-24 - Trabajo final documentado
+
+- Guía `material/Guía para trabajo final EAFIT.pdf` convertida a `material-md/Guia-trabajo-final-EAFIT.md`.
+- 6 partes: (1) montar VMs, (2) SQLi manual DVWA, (3) SQLMap + tarjetas Mutillidae, (4) XSS DVWA + Juice Shop, (5) ZAP automated scan Juice Shop, (6) SonarQube DVWA y Mutillidae.
+- `assignments/04-trabajo-final/final.html`: resumen offline con método, comandos y payloads exactos de las 6 partes, estado por parte y guía de entrega. Parte 3 apoyada en evidencia previa real `evidencias/sqli-mutillidae.md`.
+- Pendiente (requiere VMware): montar las dos VMs, correr SQLMap/ZAP/SonarQube contra la IP asignada y pegar capturas en `assignments/04-trabajo-final/img/`. No se inventó ninguna captura.
 
 ## Sin clasificar
 

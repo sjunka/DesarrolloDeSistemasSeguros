@@ -1,0 +1,111 @@
+<!doctype html><html lang="es"><head><meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checklist Docker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#f5f7f9;--surface:#fff;--fg:#18212b;--muted:#5a6876;--line:#d9e0e7;--accent:#1f5f99;--ok:#1d7a46;--ok-bg:#e3f4ea;--code-bg:#eef2f6;
+--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",Menlo,monospace;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#11161c;--surface:#18202a;--fg:#e4eaf0;--muted:#9aa8b6;--line:#2b3643;--accent:#6aa9e6;--ok:#5cc98a;--ok-bg:#16301f;--code-bg:#0c1117;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--sans)}
+.wrap{max-width:820px;margin:0 auto;padding:32px 16px 64px;display:grid;gap:28px}
+h1{font-size:1.8rem;margin:0}h2{font-size:1.2rem;margin:0;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.eyebrow{font:500 .78rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{color:var(--muted);margin:0}
+section{display:grid;gap:12px}
+.svc{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+.svc .dot{width:11px;height:11px;border-radius:50%;background:var(--ok);grid-row:span 2}
+.svc a{font-weight:600;color:var(--accent);text-decoration:none;font-size:1.05rem}
+.svc a:hover{text-decoration:underline}
+.svc .meta{font:.82rem var(--mono);color:var(--muted)}
+.svc .open{font:500 .8rem var(--sans);border:1px solid var(--line);border-radius:6px;padding:6px 12px;color:var(--fg);text-decoration:none;grid-row:span 2;align-self:center}
+.cred{font:.8rem var(--mono);color:var(--muted)}
+ul.chk{list-style:none;padding:0;margin:0;display:grid;gap:7px}
+ul.chk li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start}
+ul.chk li::before{content:"✓";color:var(--ok);font-weight:700}
+code{font:.88em var(--mono);background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.cmd{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font:.82rem var(--mono);overflow-x:auto;white-space:pre}
+.note{background:var(--ok-bg);border-radius:8px;padding:12px 16px;font-size:.9rem}
+.links a{color:var(--accent)}
+footer{color:var(--muted);font-size:.82rem;border-top:1px solid var(--line);padding-top:16px}
+</style></head><body>
+<div class="wrap">
+
+<header style="display:grid;gap:8px">
+  <div class="eyebrow">Trabajo final · SI6007 · verificación local</div>
+  <h1>Checklist — Docker corriendo</h1>
+  <p class="lead">Abre cada servicio para ver las apps vulnerables y las herramientas activas en este equipo. Los enlaces <code>localhost</code> solo funcionan en el Mac donde corre Docker.</p>
+</header>
+
+<section>
+  <h2>Servicios activos</h2>
+
+  <div class="svc">
+    <span class="dot"></span>
+    <a href="http://localhost:3000" target="_blank">OWASP Juice Shop</a>
+    <a class="open" href="http://localhost:3000" target="_blank">Abrir ↗</a>
+    <span class="meta">bkimminich/juice-shop · :3000 → 3000</span>
+  </div>
+
+  <div class="svc">
+    <span class="dot"></span>
+    <a href="http://localhost:8080/login.php" target="_blank">DVWA</a>
+    <a class="open" href="http://localhost:8080/login.php" target="_blank">Abrir ↗</a>
+    <span class="meta">vulnerables/web-dvwa · :8080 → 80 · <span class="cred">admin / password</span></span>
+  </div>
+
+  <div class="svc">
+    <span class="dot"></span>
+    <a href="http://localhost:8081/" target="_blank">Mutillidae (NOWASP)</a>
+    <a class="open" href="http://localhost:8081/" target="_blank">Abrir ↗</a>
+    <span class="meta">citizenstig/nowasp · :8081 → 80 · Security Level 0</span>
+  </div>
+
+  <div class="svc">
+    <span class="dot"></span>
+    <a href="http://localhost:9000/dashboard?id=DVWA" target="_blank">SonarQube — DVWA</a>
+    <a class="open" href="http://localhost:9000/dashboard?id=DVWA" target="_blank">Abrir ↗</a>
+    <span class="meta">sonarqube:lts-community · :9000 · <span class="cred">admin / Admin12345!</span></span>
+  </div>
+
+  <div class="svc">
+    <span class="dot"></span>
+    <a href="http://localhost:9000/dashboard?id=Mutillidae" target="_blank">SonarQube — Mutillidae</a>
+    <a class="open" href="http://localhost:9000/dashboard?id=Mutillidae" target="_blank">Abrir ↗</a>
+    <span class="meta">:9000 · 116 hotspots · 349 bugs</span>
+  </div>
+</section>
+
+<section>
+  <h2>Enlaces directos a hallazgos</h2>
+  <ul class="chk">
+    <li><a class="links" href="http://localhost:3000/#/search?q=%3Ciframe%20src%3D%22javascript:alert(%60xss%60)%22%3E" target="_blank">Juice Shop — DOM XSS en el buscador</a> (dispara el <code>alert</code> del reto)</li>
+    <li><a class="links" href="http://localhost:8080/vulnerabilities/sqli/" target="_blank">DVWA — SQL Injection</a> (login primero; payload <code>1' UNION SELECT user,password FROM users-- -</code>)</li>
+    <li><a class="links" href="http://localhost:8081/index.php?page=user-info.php" target="_blank">Mutillidae — User Lookup (SQL)</a> (tarjetas con <code>' UNION SELECT 1,ccnumber,ccv,expiration,5,6,7 FROM credit_cards-- -</code>)</li>
+    <li><a class="links" href="http://localhost:9000/security_hotspots?id=DVWA" target="_blank">SonarQube — Security Hotspots de DVWA</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Evidencias capturadas</h2>
+  <ul class="chk">
+    <li>Parte 2 — SQLi manual UNION en DVWA (5 cuentas + hashes)</li>
+    <li>Parte 3 — SQLMap volcando <code>dvwa.users</code> + tarjetas de Mutillidae</li>
+    <li>Parte 4 — DOM XSS resuelto en Juice Shop</li>
+    <li>Parte 5 — ZAP baseline sobre Juice Shop (informe HTML)</li>
+    <li>Parte 6 — SonarQube: DVWA (61 hotspots) y Mutillidae (116 hotspots)</li>
+  </ul>
+  <p class="note">Página publicada (sin <code>localhost</code>, para el profe): <a href="https://sjunka.github.io/eafit-trabajo-final-seguridad/" target="_blank">sjunka.github.io/eafit-trabajo-final-seguridad</a> · Repo: <a href="https://github.com/sjunka/eafit-trabajo-final-seguridad" target="_blank">github.com/sjunka/eafit-trabajo-final-seguridad</a></p>
+</section>
+
+<section>
+  <h2>Si algún servicio está caído</h2>
+  <div class="cmd">docker ps                              # ver qué corre
+docker start juiceshop dvwa mutillidae sonarqube
+# si no existen, recrear:
+docker run -d --name juiceshop  -p 3000:3000 bkimminich/juice-shop
+docker run -d --name dvwa       -p 8080:80   vulnerables/web-dvwa
+docker run -d --name mutillidae -p 8081:80   citizenstig/nowasp
+docker run -d --name sonarqube  -p 9000:9000 sonarqube:lts-community</div>
+</section>
+
+<footer>Desarrollo de Sistemas Seguros (SI6007) · EAFIT · Sergio Alfredo Junca Valero. Verificación local de los contenedores Docker usados como laboratorio.</footer>
+</div></body></html>
