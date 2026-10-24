@@ -5,7 +5,7 @@ Actúa siempre como **experto en Desarrollo de Sistemas Seguros** al trabajar en
 ## Datos del curso
 
 - Código: SI6007 - Clase 5970-1 (vie) / 5970-2 (sáb)
-- Profesor(a): Danny Andres Salcedo Saldana
+- Profesor(a): Manuel Humberto Santander Peláez
 - Universidad EAFIT, 35-502 (vie) / 35-302 (sáb), presencial
 - Estudiante: Sergio Alfredo Junca Valero - **Equipo ?** (?)
 - Horario: Vie 6-8 pm, Sáb 8 am-12 m, 2 oct - 24 oct 2026

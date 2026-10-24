@@ -1,6 +1,6 @@
 # Board - Desarrollo de Sistemas Seguros (SI6007)
 
-Profesor(a): Danny Andres Salcedo Saldana · Universidad EAFIT · 35-502 (vie) / 35-302 (sáb)
+Profesor(a): Manuel Humberto Santander Peláez · Universidad EAFIT · 35-502 (vie) / 35-302 (sáb)
 
 Pega aquí, sin formato, todo lo que diga el profesor. Se organiza después.
 

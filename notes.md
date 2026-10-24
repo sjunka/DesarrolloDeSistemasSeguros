@@ -1,6 +1,6 @@
 # Notas de clase - Desarrollo de Sistemas Seguros (SI6007)
 
-Profesor(a): Danny Andres Salcedo Saldana · Universidad EAFIT · 35-502 (vie) / 35-302 (sáb)
+Profesor(a): Manuel Humberto Santander Peláez · Universidad EAFIT · 35-502 (vie) / 35-302 (sáb)
 Vie 6-8 pm, Sáb 8 am-12 m, 2 oct - 24 oct 2026
 
 Aquí va lo que dice el profesor: conceptos, ejemplos, aclaraciones.
