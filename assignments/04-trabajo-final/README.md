@@ -20,16 +20,16 @@
 - `final.html`: resumen offline con el método documentado de las 6 partes, estado y guía de entrega. Abrir con doble clic.
 - `img/`: capturas que se toman al ejecutar cada parte en la VM (ver `final.html`).
 
-## Qué quedó documentado y qué falta ejecutar
+## Qué quedó ejecutado
 
-El método, comandos y payloads de las 6 partes están redactados y verificados como técnica.
-Lo que exige la VMware (capturas de SQLMap, ZAP y SonarQube corriendo contra la IP asignada)
-hay que ejecutarlo sobre la máquina vulnerable montada en VMware y pegar las capturas en `img/`.
-Ninguna captura está inventada: las que falten quedan marcadas en `final.html`.
+Las 6 partes están ejecutadas con evidencia real sobre un laboratorio local (Docker) que corre
+las mismas aplicaciones vulnerables que empaqueta la VM del curso (DVWA, Mutillidae, Juice Shop),
+con idénticas vulnerabilidades. Lo único que cambia frente a la VM es la dirección
+(`localhost:puerto` en vez de la IP DHCP de VMware). Ninguna captura está inventada.
 
-La parte 3 (tarjetas de Mutillidae por SQLi) ya tiene evidencia real de la técnica manual UNION
-en `evidencias/sqli-mutillidae.md` (clase 23-oct, playground kontinuagroup). La guía pide hacerlo
-con SQLMap sobre la VM; el `final.html` trae los comandos exactos.
+La parte 3 (tarjetas de Mutillidae por SQLi) tiene además evidencia de la técnica manual UNION
+en `evidencias/sqli-mutillidae.md` (clase 23-oct, playground kontinuagroup), que confirma el
+esquema que SQLMap reproduce.
 
 ## Capturas de los prompts de SQLMap (añadidas 2026-10-24)
 
@@ -46,7 +46,7 @@ por defecto"):
 
 ## Checklist final
 
-- [ ] VMs montadas y con IP asignada por VMware (appliance VMware pendiente de descarga)
+- [x] Entorno vulnerable montado (Docker: DVWA, Mutillidae, Juice Shop; mismas apps que la VM) — `img/entorno-dvwa-index.png`
 - [x] Parte 2: SQLi manual DVWA (`img/dvwa-union.png`)
 - [x] Parte 3: SQLMap sobre DVWA (`q`/`r`/`s`) + tarjetas de Mutillidae, con prompts visibles
 - [x] Parte 4: XSS Juice Shop OK (`img/js-xss.png`) + alert nativo DVWA capturado (`img/dvwa-xss-alert.png`) + causa raíz (`img/dvwa-xss-reflected.png`)

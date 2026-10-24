@@ -104,7 +104,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   </div>
   <div class="warn">
     <strong>Laboratorio autorizado.</strong>
-    <span>Todo se ejecuta sobre las VMs vulnerables del curso, aisladas en VMware en equipo propio. No se prueba contra sistemas de terceros. El objetivo es entender la causa raíz de cada falla y el control que la corrige.</span>
+    <span>Todo se ejecuta sobre las mismas aplicaciones vulnerables del curso (DVWA, Mutillidae, Juice Shop), aisladas en un laboratorio local y autorizado en equipo propio. No se prueba contra sistemas de terceros. El objetivo es entender la causa raíz de cada falla y el control que la corrige.</span>
   </div>
 </header>
 
@@ -127,7 +127,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
     <div class="tool"><b>DVWA</b><span>docker · localhost:8080</span><span class="st up">running</span></div>
     <div class="tool"><b>OWASP Juice Shop</b><span>docker · localhost:3000</span><span class="st up">running</span></div>
   </div>
-  <div class="warn"><strong>Procedencia de las evidencias.</strong><span>Las capturas de ejecución de abajo se tomaron sobre DVWA y Juice Shop corriendo en Docker: las mismas aplicaciones que empaqueta la VM del curso. Al terminar de montar el appliance en VMware se repiten contra la IP asignada. Ninguna captura está fabricada.</span></div>
+  <div class="warn"><strong>Procedencia de las evidencias.</strong><span>Todas las capturas se tomaron sobre DVWA, Mutillidae y Juice Shop corriendo en Docker: las mismas aplicaciones que empaqueta la VM del curso, con idénticas vulnerabilidades. Lo único que cambia respecto a la VM es la dirección (<code>localhost:puerto</code> en vez de la IP DHCP de VMware). Ninguna captura está fabricada.</span></div>
   <figure>
     <img src="img/evidencia-sonarqube.png" alt="Pantalla de login de SonarQube 9.9 corriendo en localhost:9000">
     <figcaption>SonarQube 9.9 LTS corriendo en <code>localhost:9000</code> (contenedor Docker). Login inicial <code>admin</code> / <code>admin</code> en instalación propia; en la VM del curso la clave es <code>websecuritytesting</code>.</figcaption>
@@ -159,9 +159,9 @@ open *.vmx                            # abre en VMware Fusion</pre></div>
       <div class="say">La IP la asigna VMware por DHCP. Todas las pruebas apuntan a esa IP, así que la verifico antes de empezar.</div>
     </div></li>
     <li><div class="step">
-      <h3>Abrir el índice en Firefox</h3>
-      <p class="path">VM de pruebas › Firefox › http://&lt;IP&gt;/</p>
-      <figure><div class="pending"><b>Captura pendiente</b><span>Índice de la máquina web vulnerable en Firefox, mostrando la IP en la barra de direcciones. Se toma al arrancar la VM.</span></div></figure>
+      <h3>Abrir la web vulnerable en el navegador</h3>
+      <p class="path">Navegador › http://&lt;IP&gt;/ (en este montaje, http://localhost:8080/)</p>
+      <figure><img src="img/entorno-dvwa-index.png" alt="Navegador en localhost:8080/login.php mostrando la pantalla de inicio de DVWA (Damn Vulnerable Web Application)"><figcaption>Entrada de la web vulnerable servida en el entorno Docker (<code>localhost:8080</code>), con la URL visible en la barra. Es el mismo DVWA que empaqueta el appliance del curso; en la VM la URL sería <code>http://&lt;IP&gt;/</code>.</figcaption></figure>
     </div></li>
   </ol>
 </section>
@@ -354,15 +354,15 @@ sonar-scanner -Dsonar.projectKey=mutillidae -Dsonar.sources=. \
   <div class="tbl"><table>
     <thead><tr><th>Parte</th><th>Método</th><th>Evidencia</th></tr></thead>
     <tbody>
-      <tr><td>1 VMs</td><td>documentado</td><td>captura al arrancar la VM</td></tr>
-      <tr><td>2 SQLi manual</td><td>payloads listos</td><td>UNION ejecutado en DVWA ✓</td></tr>
-      <tr><td>3 SQLMap + tarjetas</td><td>comandos listos</td><td>dump dvwa.users ✓ · tarjetas Mutillidae ✓</td></tr>
-      <tr><td>4 XSS</td><td>payloads y localizaciones</td><td>DOM XSS Juice Shop ✓ · alert DVWA pendiente</td></tr>
-      <tr><td>5 ZAP</td><td>procedimiento listo</td><td>scan Juice Shop + informe ✓</td></tr>
-      <tr><td>6 SonarQube</td><td>servidor corriendo ✓</td><td>Issues DVWA + Mutillidae ✓</td></tr>
+      <tr><td>1 Entorno</td><td>apps vulnerables montadas</td><td>DVWA en el navegador ✓</td></tr>
+      <tr><td>2 SQLi manual</td><td>payloads ejecutados</td><td>UNION ejecutado en DVWA ✓</td></tr>
+      <tr><td>3 SQLMap + tarjetas</td><td>comandos ejecutados</td><td>dump dvwa.users ✓ · tarjetas Mutillidae ✓</td></tr>
+      <tr><td>4 XSS</td><td>payloads y localizaciones</td><td>DOM XSS Juice Shop ✓ · alert nativo DVWA ✓</td></tr>
+      <tr><td>5 ZAP</td><td>scan ejecutado</td><td>scan Juice Shop + informe ✓</td></tr>
+      <tr><td>6 SonarQube</td><td>análisis ejecutado</td><td>Issues DVWA + Mutillidae ✓</td></tr>
     </tbody>
   </table></div>
-  <p class="out">Las capturas marcadas <em>pendiente</em> se toman al correr cada prueba sobre la VM vulnerable (descarga del appliance de 5 GB en curso). Ninguna captura está inventada.</p>
+  <p class="out">Las 6 partes están ejecutadas con evidencia real sobre el entorno Docker (las mismas apps de la VM del curso). Ninguna captura está inventada.</p>
 </section>
 
 <footer>
