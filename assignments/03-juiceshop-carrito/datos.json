@@ -1,0 +1,34 @@
+{
+  "base": "https://playground.kontinuagroup.com:3000",
+  "email": "sjtest_1792802989099@test.local",
+  "bid": 11,
+  "par": [
+    {
+      "id": 20,
+      "name": "Apple Juice (1000ml)",
+      "price": 1.99
+    },
+    {
+      "id": 21,
+      "name": "Banana Juice (1000ml)",
+      "price": 1.99
+    }
+  ],
+  "itemExplotado": {
+    "id": 21,
+    "name": "Banana Juice (1000ml)",
+    "price": 1.99
+  },
+  "deliveryMethod": {
+    "name": "Standard Delivery",
+    "price": 0
+  },
+  "putStatus": 200,
+  "qtyServidor": -1,
+  "itemsTotalServidor": 0,
+  "checkoutStatus": 200,
+  "orderId": "70b2-fe2a843239951950",
+  "checkoutResp": {
+    "orderConfirmation": "70b2-fe2a843239951950"
+  }
+}

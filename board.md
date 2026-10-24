@@ -24,6 +24,7 @@ Otros equipos:
 |---|--------|-------|------|-------------|--------|
 | 1 | Hackademic CMS - retos 1,2,5,6,7,10 (paso a paso) | por confirmar | por confirmar | Brightspace (individual) | Entregado (2026-10-09, Brightspace): `assignments/01-hackademic/Entrega1-Hackademic-Junca.pdf` |
 | 2 | Vulnerabilidades de un marketplace (Silk Road vs Coupang), PDF de 2 págs | por confirmar | por confirmar | por confirmar | Hecho (PDF listo, 2026-10-16; .tm7 validado y listo para subir, 2026-10-17): `assignments/02-marketplace/Entrega2-Marketplace-Junca.pdf` y `Marketplace_SergioJunca.tm7`. Falta confirmar si es entrega oficial y el canal |
+| 3 | Juice Shop - vulnerabilidad del carrito para dejar la compra en 0 | por confirmar | por confirmar | por confirmar | Hecho (2026-10-23): PoC explotada en vivo (cantidad negativa en `PUT /api/BasketItems/:id`, pedido confirmado en 0.00). Entrega offline `assignments/03-juiceshop-carrito/final.html` con capturas. Falta confirmar si es entrega oficial y el canal |
 
 Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 
@@ -59,3 +60,8 @@ Estados: Pendiente, En curso, Hecho, Entregado, Calificado.
 ### 2026-10-17 - .tm7 del marketplace validado
 - `assignments/02-marketplace/Marketplace_SergioJunca.tm7` regenerado: el anterior no abría en el Threat Modeling Tool (faltaba la KnowledgeBase). Es el DFD del mapa del PDF: frontera de confianza, 13 flujos, números de los 5 puntos de falla y 74 amenazas STRIDE generadas por la herramienta.
 - Validado con el código de carga del TMT 7.3.51110 en macOS (`tm7/build.sh`). No se probó en la interfaz de Windows. Listo para subir a la plataforma del profe.
+
+### 2026-10-24 - Entrega 3: vector SQLi del profe verificado y descartado
+- El profe sugirió lograrlo con SQLi + UPDATE. Probado en vivo: search (`/rest/products/search?q=`) y login son inyectables (SQLite), pero solo `SELECT`. Stacked `;UPDATE Products SET price=...` → `SQLITE_ERROR: near ";"`; precio id=1 sigue 1.99. No hay UPDATE por SQLi en esta instancia.
+- El reto real es **Payback Time** (Improper Input Validation): cantidad negativa en el carrito. Nuestra PoC ya lo resuelve.
+- `final.html` actualizado con sección 4 "Vector SQLi con UPDATE: descartado (verificado)".
