@@ -41,14 +41,15 @@ por defecto"):
 - `img/sqlmap-r-tables.png`: paso r — `--tables -D dvwa` (muestra `guestbook` y `users`).
 - `img/sqlmap-s-dump-users.png`: paso s — `--dump -T users -D dvwa` con los prompts de cracking (`store hashes [y/N] N`, `crack them [Y/n/q] Y`) y el volcado de los 5 usuarios.
 - `img/sqlmap-mutillidae-cards.png`: paso t — `--dump -T credit_cards -D mutillidae` con el prompt de cookie y las 5 tarjetas de crédito.
-- `img/dvwa-xss-reflected.png`: parte 4 — respuesta de DVWA con `<script>alert('hola');</script>` reflejado sin escapar dentro de `<pre>`.
+- `img/dvwa-xss-alert.png`: parte 4 — el **alert nativo** `localhost says: hola` disparado en vivo sobre DVWA (XSS reflejado, Security Low).
+- `img/dvwa-xss-reflected.png`: parte 4 (causa raíz) — respuesta de DVWA con `<script>alert('hola');</script>` reflejado sin escapar dentro de `<pre>`.
 
 ## Checklist final
 
 - [ ] VMs montadas y con IP asignada por VMware (appliance VMware pendiente de descarga)
 - [x] Parte 2: SQLi manual DVWA (`img/dvwa-union.png`)
 - [x] Parte 3: SQLMap sobre DVWA (`q`/`r`/`s`) + tarjetas de Mutillidae, con prompts visibles
-- [~] Parte 4: XSS Juice Shop OK (`img/js-xss.png`) + reflexión XSS DVWA probada (`img/dvwa-xss-reflected.png`). Falta el pantallazo del **cuadro de alert** nativo (tomarlo con un clic en Firefox logueado, URL abajo)
+- [x] Parte 4: XSS Juice Shop OK (`img/js-xss.png`) + alert nativo DVWA capturado (`img/dvwa-xss-alert.png`) + causa raíz (`img/dvwa-xss-reflected.png`)
 - [x] Parte 5: ZAP automated scan Juice Shop (`img/zap-report.png`)
 - [x] Parte 6: SonarQube DVWA + Mutillidae (`img/sonar-dvwa.png`, `img/evidencia-sonarqube.png`, `img/svc-*`)
 - [ ] Nombre del integrante en el documento

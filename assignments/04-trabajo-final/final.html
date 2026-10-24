@@ -247,8 +247,8 @@ sqlmap -u "..." --cookie="..." --dump -T users -D dvwa --batch</pre></div>
       <p class="path">DVWA › DVWA Security: Low › XSS (Reflected)</p>
       <div class="code"><button type="button">Copiar</button><pre>&lt;script&gt;alert('hola');&lt;/script&gt;</pre></div>
       <p>La app refleja el parámetro <code>name</code> sin codificar: el navegador ejecuta el script y sale el <em>alert</em>.</p>
-      <figure><img src="img/dvwa-xss-reflected.png" alt="Respuesta HTTP de DVWA: el payload script alert hola se refleja sin escapar dentro de la etiqueta pre"><figcaption>Evidencia real: la respuesta de DVWA devuelve <code>&lt;pre&gt;Hello &lt;script&gt;alert('hola');&lt;/script&gt;&lt;/pre&gt;</code> — el payload se refleja <strong>sin escapar</strong>, por lo que el navegador lo ejecuta y dispara el <em>alert</em>.</figcaption></figure>
-      <figure><div class="pending"><b>Captura opcional</b><span>El cuadro de <em>alert('hola')</em> nativo, de un clic abriendo la URL del payload en Firefox logueado en DVWA (Low).</span></div></figure>
+      <figure><img src="img/dvwa-xss-alert.png" alt="Navegador en la URL del payload de DVWA mostrando el cuadro de dialogo nativo 'localhost:8080 says: hola'"><figcaption>Vulnerabilidad materializada: el navegador, en la URL <code>xss_r/?name=&lt;script&gt;alert('hola');&lt;/script&gt;</code>, ejecuta el script y dispara el <em>alert</em> nativo (<strong>localhost says: hola</strong>). Ejecución real sobre DVWA (Security: Low).</figcaption></figure>
+      <figure><img src="img/dvwa-xss-reflected.png" alt="Respuesta HTTP de DVWA: el payload script alert hola se refleja sin escapar dentro de la etiqueta pre"><figcaption>Causa raíz: la respuesta de DVWA devuelve <code>&lt;pre&gt;Hello &lt;script&gt;alert('hola');&lt;/script&gt;&lt;/pre&gt;</code> — el payload se refleja <strong>sin escapar</strong>, por eso el navegador lo ejecuta.</figcaption></figure>
     </div></li>
     <li><div class="step">
       <h3>XSS en Juice Shop: conteo y localizaciones</h3>
