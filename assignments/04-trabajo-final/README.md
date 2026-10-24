@@ -31,13 +31,33 @@ La parte 3 (tarjetas de Mutillidae por SQLi) ya tiene evidencia real de la técn
 en `evidencias/sqli-mutillidae.md` (clase 23-oct, playground kontinuagroup). La guía pide hacerlo
 con SQLMap sobre la VM; el `final.html` trae los comandos exactos.
 
+## Capturas de los prompts de SQLMap (añadidas 2026-10-24)
+
+Sesiones reales de SQLMap sobre los contenedores Docker (mismas apps que la VM), con el comando
+exacto arriba y las **preguntas interactivas** que la guía menciona ("dale enter a las respuestas
+por defecto"):
+
+- `img/sqlmap-q-currentdb.png`: paso q — `-b --current-db --current-user` (banner MariaDB, `current database: dvwa`, `current user: app@localhost`).
+- `img/sqlmap-r-tables.png`: paso r — `--tables -D dvwa` (muestra `guestbook` y `users`).
+- `img/sqlmap-s-dump-users.png`: paso s — `--dump -T users -D dvwa` con los prompts de cracking (`store hashes [y/N] N`, `crack them [Y/n/q] Y`) y el volcado de los 5 usuarios.
+- `img/sqlmap-mutillidae-cards.png`: paso t — `--dump -T credit_cards -D mutillidae` con el prompt de cookie y las 5 tarjetas de crédito.
+- `img/dvwa-xss-reflected.png`: parte 4 — respuesta de DVWA con `<script>alert('hola');</script>` reflejado sin escapar dentro de `<pre>`.
+
 ## Checklist final
 
-- [ ] VMs montadas y con IP asignada por VMware
-- [ ] Parte 2: capturas de DVWA (SQL Injection, Low) con los payloads
-- [ ] Parte 3: capturas de SQLMap (`--dbs`, `--tables`, `--dump`) sobre DVWA y tarjetas de Mutillidae
-- [ ] Parte 4: captura del alert en DVWA + localizaciones XSS confirmadas en la instancia de Juice Shop
-- [ ] Parte 5: ZAP automated scan sobre Juice Shop, un pantallazo por alerta
-- [ ] Parte 6: SonarQube con el detalle de DVWA y de Mutillidae
+- [ ] VMs montadas y con IP asignada por VMware (appliance VMware pendiente de descarga)
+- [x] Parte 2: SQLi manual DVWA (`img/dvwa-union.png`)
+- [x] Parte 3: SQLMap sobre DVWA (`q`/`r`/`s`) + tarjetas de Mutillidae, con prompts visibles
+- [~] Parte 4: XSS Juice Shop OK (`img/js-xss.png`) + reflexión XSS DVWA probada (`img/dvwa-xss-reflected.png`). Falta el pantallazo del **cuadro de alert** nativo (tomarlo con un clic en Firefox logueado, URL abajo)
+- [x] Parte 5: ZAP automated scan Juice Shop (`img/zap-report.png`)
+- [x] Parte 6: SonarQube DVWA + Mutillidae (`img/sonar-dvwa.png`, `img/evidencia-sonarqube.png`, `img/svc-*`)
 - [ ] Nombre del integrante en el documento
 - [ ] Entregado y estado actualizado en `board.md`
+
+## Para el pantallazo del alert (parte 4), un clic
+
+Estás logueado en DVWA (Security = Low). Abre esta URL en el navegador y sale el `alert('hola')`:
+
+```
+http://localhost:8080/vulnerabilities/xss_r/?name=<script>alert('hola');</script>
+```
