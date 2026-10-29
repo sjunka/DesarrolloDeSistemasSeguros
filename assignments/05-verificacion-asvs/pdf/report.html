@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Verificación de seguridad nivel 1 del marketplace — ASVS 5.0.0</title>
+<style>
+:root {
+  --ink:#14171c; --muted:#5b6470; --line:#d9dde2; --soft:#f5f6f8;
+  --red:#b3261e; --redsoft:#fbeceb; --redtext:#8a3f3a;
+}
+@page {
+  size: Letter; margin: 14mm 14mm 16mm;
+  @bottom-left { content: "Sergio Alfredo Junca Valero · SI6007 Desarrollo de Sistemas Seguros · Universidad EAFIT"; font: 6.8pt "Helvetica Neue", Helvetica, Arial, sans-serif; color:#8a919c; }
+  @bottom-right { content: "Página " counter(page) " de " counter(pages); font: 6.8pt "Helvetica Neue", Helvetica, Arial, sans-serif; color:#8a919c; }
+}
+* { box-sizing:border-box; }
+html { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+body { margin:0; color:var(--ink); font:9.3pt/1.44 "Helvetica Neue", Helvetica, Arial, sans-serif; }
+p { margin:0 0 6px; orphans:2; widows:2; }
+p:last-child { margin-bottom:0; }
+h2 { font-size:14pt; margin:0 0 3px; letter-spacing:-.005em; }
+h3 { font-size:10.6pt; margin:14px 0 4px; }
+h3:first-child { margin-top:0; }
+h4 { font-size:9.3pt; margin:10px 0 3px; }
+.c { color:var(--muted); }
+a { color:inherit; }
+.pg { break-before:page; padding-top:2px; }
+.kicker { font-size:7.6pt; letter-spacing:.09em; text-transform:uppercase; color:var(--red); font-weight:700; margin-bottom:3px; }
+.secnum { color:var(--red); }
+
+/* ---- cover / intro (page 1) ---- */
+header.cover { border-bottom:2px solid var(--ink); padding-bottom:9px; margin-bottom:10px; }
+header.cover h1 { font-size:22pt; line-height:1.1; margin:2px 0 5px; letter-spacing:-.01em; }
+header.cover .sub { font-size:10.6pt; line-height:1.32; color:#2b3138; margin-bottom:6px; }
+header.cover .meta { font-size:8.3pt; color:var(--muted); }
+.thesis { background:var(--soft); border-left:4px solid var(--red); padding:8px 11px; margin:10px 0 2px; font-size:9.3pt; line-height:1.44; }
+
+/* ---- generic components ---- */
+.fig { margin:10px 0; }
+.fig svg { width:100%; height:auto; display:block; }
+.fig .cap { font-size:7.9pt; color:var(--muted); margin-top:4px; line-height:1.3; }
+.fig .cap b { color:var(--ink); }
+
+table.std { width:100%; border-collapse:collapse; font-size:8.3pt; line-height:1.32; }
+table.std th { text-align:left; font-size:7.6pt; padding:4px 6px; color:#fff; background:#3b414a; font-weight:700; letter-spacing:.02em; }
+table.std td { padding:5px 6px; vertical-align:top; border-bottom:1px solid var(--line); }
+table.std tr:last-child td { border-bottom:none; }
+table.std td.n { color:var(--red); font-weight:700; white-space:nowrap; }
+table.std caption { caption-side:top; text-align:left; font-size:8.6pt; font-weight:700; margin-bottom:3px; }
+p.tbl-cap { text-align:left; font-size:8.6pt; font-weight:700; margin:0 0 3px; }
+table.std.keep { break-inside:avoid; }
+
+.pill { display:inline-block; font-size:7.8pt; padding:1px 0; }
+.pill.ok { color:var(--ink); font-weight:700; }
+.pill.inh { color:#2b5f8a; font-weight:700; }
+.pill.pen { color:#8a919c; font-style:italic; }
+.pill.na { color:#b7bcc3; font-style:italic; }
+.pill.gap { color:var(--red); font-weight:700; }
+
+.callout { background:var(--soft); border-left:4px solid var(--ink); padding:6px 10px; margin:8px 0; font-size:8.6pt; line-height:1.38; }
+.callout.warn { border-left-color:var(--red); background:var(--redsoft); color:var(--redtext); }
+ul, ol { margin:4px 0 8px 18px; padding:0; }
+li { margin-bottom:3px; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+pre { margin:4px 0; padding:7px 9px; background:#f3f4f6; border-radius:4px; font:7.6pt/1.42 Menlo, Monaco, monospace; white-space:pre-wrap; }
+.small { font-size:8.1pt; color:var(--muted); }
+
+/* ---- annex table ---- */
+table.annex { width:100%; border-collapse:collapse; font-size:6.9pt; line-height:1.28; table-layout:fixed; }
+table.annex th { text-align:left; padding:4px 5px; color:#fff; background:#3b414a; font-size:6.8pt; position:sticky; top:0; }
+table.annex td { padding:3.5px 5px; vertical-align:top; border-bottom:1px solid var(--line); overflow-wrap:break-word; }
+table.annex tr.chap td { background:var(--soft); font-weight:700; color:var(--ink); padding:4px 5px; font-size:7.1pt; letter-spacing:.02em; }
+table.annex .rid { width:12%; font:7pt Menlo, Monaco, monospace; white-space:nowrap; }
+table.annex .rdesc { width:40%; }
+table.annex .rstate { width:11%; }
+table.annex .rjust { width:37%; color:var(--muted); }
+table.annex tbody { break-inside:auto; }
+table.annex tr { break-inside:avoid; }
+
+/* ---- references ---- */
+.refs .cols { column-count:2; column-gap:14px; font-size:7.1pt; line-height:1.3; color:#3a4048; }
+.refs .r { padding-left:10px; text-indent:-10px; margin:0 0 5px; break-inside:avoid; overflow-wrap:anywhere; }
+</style>
+</head>
+<body>
+
+<!-- ======================= PÁGINA 1 — PORTADA + INTRODUCCIÓN ======================= -->
+<header class="cover">
+  <div class="kicker">SI6007 · Desarrollo de Sistemas Seguros · Universidad EAFIT</div>
+  <h1>Verificación de seguridad nivel 1 del marketplace</h1>
+  <div class="sub">Aplicación de OWASP ASVS 5.0.0 sobre el modelo de amenazas de la Entrega 2 (Silk Road y Coupang) y su archivo <code>Marketplace_SergioJunca.tm7</code></div>
+  <div class="meta">Sergio Alfredo Junca Valero · Profesor Manuel Humberto Santander Peláez · Octubre de 2026</div>
+</header>
+
+<div class="thesis">Este documento verifica, a nivel 1 (L1), el marketplace que ya modelé en la Entrega 2: un comprador y un vendedor alrededor de una plataforma con login, catálogo y pedidos, pagos y retiros, servidores y secretos, y logs — los mismos cinco puntos de falla que allí comparé entre el caso Silk Road (2012-2014) y el caso Coupang (2024-2026). Esta vez no repito la investigación de esos dos casos: la uso como evidencia para decidir, requisito por requisito, si el diseño los resuelve.</div>
+
+<h3>1. Introducción</h3>
+<p>El taller pide verificar en nivel 1 el proyecto que cada quien ya modeló con el Microsoft Threat Modeling Tool. Sigo los mismos cuatro pasos que un ejemplo de verificación visto en clase: delimitar el alcance, revisar el modelo de amenazas, evaluar cada requisito L1 y reportar el resultado con su plan de trabajo.</p>
+<p>La verificación usa un solo estándar: <b>OWASP ASVS 5.0.0</b>. No uso AISVS (el complemento de IA de OWASP) porque el marketplace de la Entrega 2 no tiene ningún componente de inteligencia artificial — ni asistente, ni modelo de fraude, ni recomendador. Forzar esa evaluación habría significado inventar una pieza que mi proyecto no tiene, y la instrucción del curso es explícita: no inventar datos ni resultados.</p>
+<p>El documento es corto a propósito: en vez de diseñar un marketplace nuevo y más grande, verifico el que ya existe y dejo cada vacío real a la vista en vez de disimularlo con alcance adicional.</p>
+
+<!-- ======================= PÁGINA 2 — ALCANCE ======================= -->
+<section class="pg">
+<h3><span class="secnum">2.</span> Alcance de la verificación</h3>
+
+<h4>2.1 Sistema evaluado</h4>
+<p>El marketplace conecta un comprador y un vendedor a través de cinco piezas: <b>login y autenticación</b> (quién eres), <b>catálogo y pedidos</b> (qué se vende y se compra), <b>pagos y retiros</b> (el dinero, incluida la liquidación al vendedor), <b>servidores y secretos</b> (llaves, configuración, paneles de administración) y <b>logs y monitoreo</b> (detectar, probar y responder). El pago en sí lo procesa una <b>pasarela externa regulada</b>; el marketplace nunca ve el número de tarjeta. Personal interno (soporte y desarrollo) accede a servidores y configuración.</p>
+<p>Esta es la misma arquitectura de la Figura 1 de la Entrega 2, redibujada aquí como diagrama de flujo de datos con la notación del curso. Los cinco números son los mismos cinco puntos de falla de esa entrega — ahora cada uno se verifica contra un requisito real de ASVS en la sección 3.2.</p>
+
+<div class="fig">
+<svg viewBox="0 0 920 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mkt-title mkt-desc">
+  <title id="mkt-title">Arquitectura y puntos de falla del marketplace</title>
+  <desc id="mkt-desc">Diagrama de flujo de datos: comprador, vendedor y personal con acceso alrededor de la plataforma del marketplace (login, catalogo y pedidos, pagos y retiros, servidores y secretos, logs y monitoreo), con la pasarela de pagos externa y los 5 puntos de falla prioritarios numerados.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5b6470"/></marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#b3261e"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <!-- Zone: Plataforma del marketplace (drawn before arrows/nodes) -->
+  <rect x="208" y="24" width="380" height="512" rx="8" fill="rgba(20,23,28,0.025)" stroke="rgba(20,23,28,0.12)" stroke-width="0.8" stroke-dasharray="5,4"/>
+  <rect x="228" y="28" width="192" height="14" fill="#ffffff"/>
+  <text x="228" y="39" fill="#8a919c" font-size="8" letter-spacing="0.08em" font-weight="700">PLATAFORMA DEL MARKETPLACE</text>
+
+  <!-- ===== Arrows (behind nodes) ===== -->
+  <!-- 1 Comprador -> Login (straight, y=84; exits/enters right/left edges, never crosses Vendedor) -->
+  <line x1="172" y1="84" x2="232" y2="84" stroke="#5b6470" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <!-- 2 Vendedor -> Catalogo (straight, y=196) -->
+  <line x1="172" y1="196" x2="232" y2="196" stroke="#5b6470" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <!-- 3 Comprador -> Catalogo (elbow, right+down, corridor x=184; stays right of x=172 so it never enters Vendedor's column) -->
+  <path d="M 172,112 H 176 Q 184,112 184,120 V 204 Q 184,212 192,212 H 232" fill="none" stroke="#5b6470" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <!-- 4 Vendedor -> Login (elbow, right+up, corridor x=204; stays right of x=172 so it never enters Comprador's column) -->
+  <path d="M 172,172 H 196 Q 204,172 204,164 V 112 Q 204,104 212,104 H 232" fill="none" stroke="#5b6470" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <!-- 5 Catalogo -> Pagos (straight vertical, x=388) -->
+  <line x1="388" y1="224" x2="388" y2="256" stroke="#5b6470" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <!-- 6 Pagos -> Pasarela (straight, y=276, accent) -->
+  <line x1="544" y1="276" x2="680" y2="276" stroke="#b3261e" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+  <!-- 7 Pasarela -> Pagos (straight dashed, y=300) -->
+  <line x1="680" y1="300" x2="544" y2="300" stroke="#5b6470" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <!-- 8 Personal -> Servidores (straight dashed, y=384) -->
+  <line x1="172" y1="384" x2="232" y2="384" stroke="#5b6470" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <!-- 9 Pagos -> Logs (elbow via right corridor, around Servidores) -->
+  <path d="M 544,312 H 552 Q 560,312 560,320 V 464 Q 560,472 552,472 H 544" fill="none" stroke="#5b6470" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- Arrow labels (masked) -->
+  <rect x="178" y="68" width="34" height="12" rx="2" fill="#ffffff"/>
+  <text x="195" y="78" fill="#5b6470" font-size="7.5" text-anchor="middle" letter-spacing="0.04em">SESIÓN</text>
+
+  <rect x="556" y="260" width="68" height="12" rx="2" fill="#ffffff"/>
+  <text x="590" y="270" fill="#b3261e" font-size="7.5" text-anchor="middle" letter-spacing="0.03em">INTENCIÓN</text>
+
+  <rect x="556" y="304" width="76" height="12" rx="2" fill="#ffffff"/>
+  <text x="594" y="314" fill="#5b6470" font-size="7.5" text-anchor="middle" letter-spacing="0.02em">WEBHOOK</text>
+
+  <rect x="176" y="368" width="34" height="12" rx="2" fill="#ffffff"/>
+  <text x="193" y="378" fill="#5b6470" font-size="7.5" text-anchor="middle" letter-spacing="0.04em">ADMIN</text>
+
+  <!-- ===== Nodes: actors (left) ===== -->
+  <!-- Comprador -->
+  <rect x="24" y="64" width="148" height="64" rx="6" fill="rgba(91,100,112,0.08)" stroke="#8a919c" stroke-width="1"/>
+  <text x="98" y="92" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Comprador</text>
+  <text x="98" y="107" fill="#5b6470" font-size="8.5" text-anchor="middle">cuenta y sesión</text>
+
+  <!-- Vendedor -->
+  <rect x="24" y="160" width="148" height="64" rx="6" fill="rgba(91,100,112,0.08)" stroke="#8a919c" stroke-width="1"/>
+  <text x="98" y="188" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Vendedor</text>
+  <text x="98" y="203" fill="#5b6470" font-size="8.5" text-anchor="middle">cuenta y listados</text>
+
+  <!-- Personal con acceso -->
+  <rect x="24" y="352" width="148" height="64" rx="6" fill="rgba(91,100,112,0.08)" stroke="#8a919c" stroke-width="1"/>
+  <text x="98" y="380" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Personal con</text>
+  <text x="98" y="393" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">acceso</text>
+  <text x="98" y="407" fill="#5b6470" font-size="8.5" text-anchor="middle">soporte y desarrollo</text>
+  <circle cx="160" cy="364" r="9" fill="#b3261e"/>
+  <text x="160" y="368" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle">4</text>
+
+  <!-- ===== Nodes: platform (inside zone) ===== -->
+  <!-- Login y autenticacion -->
+  <rect x="232" y="64" width="312" height="64" rx="6" fill="#ffffff" stroke="#14171c" stroke-width="1"/>
+  <text x="388" y="92" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Login y autenticación</text>
+  <text x="388" y="107" fill="#5b6470" font-size="8.5" text-anchor="middle">quién eres · tokens firmados</text>
+  <circle cx="528" cy="76" r="9" fill="#b3261e"/>
+  <text x="528" y="80" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle">2</text>
+
+  <!-- Catalogo y pedidos -->
+  <rect x="232" y="160" width="312" height="64" rx="6" fill="#ffffff" stroke="#14171c" stroke-width="1"/>
+  <text x="388" y="188" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Catálogo y pedidos</text>
+  <text x="388" y="203" fill="#5b6470" font-size="8.5" text-anchor="middle">productos, carrito, estado del pedido</text>
+
+  <!-- Pagos y retiros (focal) -->
+  <rect x="232" y="256" width="312" height="64" rx="6" fill="#fbeceb" stroke="#b3261e" stroke-width="1.2"/>
+  <text x="388" y="284" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Pagos y retiros</text>
+  <text x="388" y="299" fill="#8a3f3a" font-size="8.5" text-anchor="middle">saldo, cobro y liquidación</text>
+  <circle cx="528" cy="268" r="9" fill="#b3261e"/>
+  <text x="528" y="272" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle">1</text>
+
+  <!-- Servidores y secretos -->
+  <rect x="232" y="352" width="312" height="64" rx="6" fill="#ffffff" stroke="#14171c" stroke-width="1"/>
+  <text x="388" y="380" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Servidores y secretos</text>
+  <text x="388" y="395" fill="#5b6470" font-size="8.5" text-anchor="middle">llaves, configuración, paneles admin</text>
+  <circle cx="528" cy="364" r="9" fill="#b3261e"/>
+  <text x="528" y="368" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle">3</text>
+
+  <!-- Logs y monitoreo -->
+  <rect x="232" y="448" width="312" height="64" rx="6" fill="#ffffff" stroke="#14171c" stroke-width="1"/>
+  <text x="388" y="476" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Logs y monitoreo</text>
+  <text x="388" y="491" fill="#5b6470" font-size="8.5" text-anchor="middle">detectar, probar y responder</text>
+  <circle cx="528" cy="460" r="9" fill="#b3261e"/>
+  <text x="528" y="464" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle">5</text>
+
+  <!-- ===== Node: Pasarela de pagos (external, right) ===== -->
+  <rect x="680" y="256" width="176" height="64" rx="6" fill="rgba(20,23,28,0.03)" stroke="rgba(20,23,28,0.3)" stroke-width="1"/>
+  <text x="768" y="284" fill="#14171c" font-size="12" font-weight="700" text-anchor="middle">Pasarela de pagos</text>
+  <text x="768" y="299" fill="#5b6470" font-size="8.5" text-anchor="middle">tercero regulado</text>
+
+  <!-- ===== Legend ===== -->
+  <line x1="24" y1="548" x2="896" y2="548" stroke="rgba(20,23,28,0.12)" stroke-width="0.8"/>
+  <text x="24" y="564" fill="#5b6470" font-size="8" letter-spacing="0.12em" font-weight="700">LEYENDA</text>
+
+  <rect x="24" y="580" width="14" height="10" rx="2" fill="#fbeceb" stroke="#b3261e" stroke-width="1"/>
+  <text x="44" y="589" fill="#5b6470" font-size="8.5">Punto crítico evidenciado (retiro atómico)</text>
+
+  <rect x="296" y="580" width="14" height="10" rx="2" fill="#ffffff" stroke="#14171c" stroke-width="1"/>
+  <text x="316" y="589" fill="#5b6470" font-size="8.5">Dentro de la plataforma</text>
+
+  <rect x="500" y="580" width="14" height="10" rx="2" fill="rgba(91,100,112,0.08)" stroke="#8a919c" stroke-width="1"/>
+  <text x="520" y="589" fill="#5b6470" font-size="8.5">Actor externo</text>
+
+  <circle cx="676" cy="585" r="8" fill="#b3261e"/>
+  <text x="676" y="588.5" fill="#ffffff" font-size="9" font-weight="700" text-anchor="middle">N</text>
+  <text x="692" y="589" fill="#5b6470" font-size="8.5">Punto de falla prioritario (Tabla 2)</text>
+
+  <line x1="24" y1="604" x2="52" y2="604" stroke="#5b6470" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="60" y="607" fill="#5b6470" font-size="8.5">Flujo asíncrono / administrativo</text>
+</svg>
+<div class="cap"><b>Figura 1.</b> Arquitectura del marketplace por zona de confianza, con los 5 puntos de falla de la Entrega 2 numerados. Elaboración propia. Notación DFD: rectángulo para actor externo o proceso, línea punteada para frontera de confianza.</div>
+</div>
+
+<h4>2.2 Estándar, versión y forma de citar</h4>
+<p>Se usó <b>ASVS 5.0.0</b> (OWASP Foundation, 2025), publicado en mayo de 2025: 345 requisitos en total, de los cuales <b>70 son de nivel 1</b> — cifra confirmada contra el CSV oficial del repositorio del estándar, no copiada de memoria. Cada requisito se cita con su versión, como recomienda el proyecto: <code>v5.0.0-6.2.4</code> en vez de solo <code>6.2.4</code>, porque los identificadores pueden cambiar entre versiones.</p>
+
+<h4>2.3 Nivel objetivo</h4>
+<p>El taller pide L1. Es el punto de partida correcto para un proyecto de curso, pero un marketplace real que mueve dinero de terceros y datos personales (Ley 1581 de 2012) es, por definición de los propios niveles de ASVS, un sistema L2. La sección 6.4 cierra con la ruta hacia ese nivel.</p>
+
+<h4>2.4 Tipo de verificación y supuestos</h4>
+<p>Es una verificación <b>de diseño</b>: el marketplace no está desplegado, así que la evidencia son decisiones de arquitectura, no código en ejecución. Lo que solo se puede comprobar desplegado queda <i>Pendiente</i>, con la verificación que lo cerraría. Supuestos declarados para poder evaluar:</p>
+<ul>
+<li>La autenticación es propia (usuario/contraseña + política declarada en 4.1 de V6), con sesión representada por <b>tokens autocontenidos firmados</b>. No se delega el login a un proveedor externo vía OAuth/OIDC.</li>
+<li>Los datos de tarjeta no pasan por el marketplace: viajan del navegador a la pasarela; el servicio de Pagos solo guarda referencias y el saldo/estado de la cuenta del vendedor.</li>
+<li>No hay carga de archivos (imágenes de producto) diseñada en este ejercicio — ver Exclusiones.</li>
+<li>No hay procesamiento de XML (sin facturación electrónica ni integraciones que lo requieran) ni conexiones WebSocket.</li>
+</ul>
+
+<h4>2.5 Exclusiones</h4>
+<ul>
+<li><b>AISVS completo:</b> no aplica — el sistema no tiene componentes de IA (OWASP Foundation, 2026).</li>
+<li><b>V10 OAuth and OIDC</b> (5 requisitos L1): N.A. por el supuesto de autenticación propia (2.4).</li>
+<li><b>V4.4.1</b> (WebSocket sobre TLS) y <b>V1.5.1</b> (XXE/parsers XML): N.A., el diseño no usa ninguno de los dos.</li>
+<li><b>V5 File Handling</b> (4 requisitos L1): la carga de imágenes de producto no se diseñó en este ejercicio; quedan <i>Pendiente</i>, no N.A., porque un marketplace real sí la va a necesitar.</li>
+</ul>
+</section>
+
+<!-- ======================= PÁGINA 3 — MODELO DE AMENAZAS ======================= -->
+<section class="pg">
+<h3><span class="secnum">3.</span> Modelo de amenazas</h3>
+
+<h4>3.1 Diagnóstico del modelo real (.tm7)</h4>
+<p><code>Marketplace_SergioJunca.tm7</code> (plantilla SDL TM Knowledge Base Core, validado con el código del Threat Modeling Tool 7.3 el 17-oct-2026) genera <b>74 amenazas STRIDE</b> sobre la frontera de confianza "Plataforma del marketplace" y sus 13 flujos. Las 74 están en estado <i>Not Started</i>: la herramienta las generó, pero nadie las ha triado todavía — mismo punto de partida que cualquier modelo recién generado, antes de revisar amenaza por amenaza.</p>
+<p>Esta verificación no re-triaje las 74 una por una: sería repetir trabajo de modelado, no de verificación ASVS. En su lugar, toma las <b>5 amenazas ya priorizadas</b> en la Entrega 2 — que surgen de dos incidentes reales, no de la salida genérica de la herramienta — y las conecta con requisitos concretos. Triar las 69 amenazas restantes del <code>.tm7</code> queda en el plan de remediación (6.3).</p>
+
+<h4>3.2 Amenazas prioritarias</h4>
+<p>La Tabla 1 retoma los cinco puntos de falla de la Entrega 2 (Silk Road 2012-2014 frente a Coupang 2024-2026) y los conecta con los requisitos L1 de ASVS que los cierran o los dejan abiertos.</p>
+
+<table class="std">
+<caption class="tbl-cap">Tabla 1. Amenazas prioritarias y su requisito ASVS 5.0.0</caption>
+<thead><tr><th style="width:4%">N.º</th><th style="width:32%">Amenaza (origen)</th><th style="width:8%">STRIDE</th><th style="width:30%">Requisito L1 decisivo</th><th style="width:26%">Estado</th></tr></thead>
+<tbody>
+<tr><td class="n">1</td><td>Validación crítica en el retiro: más de 50.000 BTC movidos con retiros en rápida sucesión.</td><td>T</td><td>v5.0.0-2.2.1 / 2.2.2 — validación de negocio forzada en el servidor</td><td><span class="pill ok">Cumple</span> — retiro atómico (5.1)</td></tr>
+<tr><td class="n">2</td><td>Cuentas falsas (registro abierto) y tokens de login falsificados con una llave filtrada.</td><td>S, I</td><td>v5.0.0-6.1.1 (rate limiting) + v5.0.0-9.1.3 (origen de la llave)</td><td><span class="pill ok">Cumple</span> / <span class="pill pen">Pendiente</span></td></tr>
+<tr><td class="n">3</td><td>Secretos y configuración: servidor alcanzable fuera de Tor; llave de firma sin rotar al salir un ingeniero.</td><td>I</td><td>v5.0.0-7.4.1 — invalidar sesiones/rotar la llave de firma</td><td><span class="pill ok">Cumple</span> — diseño (5.2)</td></tr>
+<tr><td class="n">4</td><td>Personas con acceso: rastros propios del operador; un exempleado conocía las fallas de autenticación.</td><td>E</td><td>v5.0.0-7.4.2 — terminar sesiones al dar de baja una cuenta</td><td><span class="pill ok">Cumple</span> — diseño (5.2)</td></tr>
+<tr><td class="n">5</td><td>Detectar y responder: fuga de IP hallada por un DDoS; meses sin detectar y logs borrados.</td><td>R</td><td>V16 Security Logging — <b>sin requisitos L1</b> en ASVS 5.0.0</td><td class="small">Ver 6.2 y 6.4</td></tr>
+</tbody>
+</table>
+<p class="small" style="margin-top:4px">STRIDE: S suplantación, T manipulación, R repudio, I divulgación, E elevación de privilegios.</p>
+
+<h4>3.3 Reglas de autorización</h4>
+<p>La Tabla 2 es la documentación de autorización que pide <code>v5.0.0-8.1.1</code>: qué puede hacer cada rol sobre cada recurso. Es la evidencia de que V8 (Authorization) sí quedó diseñado, aunque el sistema no esté desplegado.</p>
+<table class="std keep">
+<caption class="tbl-cap">Tabla 2. Matriz de autorización por rol</caption>
+<thead><tr><th style="width:30%">Acción</th><th style="width:23%">Comprador</th><th style="width:23%">Vendedor</th><th style="width:24%">Personal con acceso</th></tr></thead>
+<tbody>
+<tr><td>Ver catálogo</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+<tr><td>Crear pedido / pagar</td><td>Propio</td><td>No</td><td>No</td></tr>
+<tr><td>Ver pedido</td><td>Propio</td><td>De su tienda, filtrado por su cuenta</td><td>Con registro (soporte)</td></tr>
+<tr><td>Publicar producto</td><td>No</td><td>Propio</td><td>No</td></tr>
+<tr><td>Retirar saldo / liquidación</td><td>No</td><td>Propia, con reautenticación</td><td>Aprobar montos altos (finanzas)</td></tr>
+<tr><td>Cambiar cuenta de liquidación</td><td>No</td><td>Propia, reautenticando</td><td>No</td></tr>
+<tr><td>Administrar servidores/secretos</td><td>No</td><td>No</td><td>Sí, con acceso de mínimo privilegio</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ======================= PÁGINA 4 — EVALUACIÓN ======================= -->
+<section class="pg">
+<h3><span class="secnum">4.</span> Evaluación</h3>
+
+<h4>4.1 Criterios de estado</h4>
+<table class="std">
+<thead><tr><th style="width:14%">Estado</th><th>Significado</th></tr></thead>
+<tbody>
+<tr><td><span class="pill ok">Cumple</span></td><td>El diseño resuelve el requisito con una decisión de arquitectura o de documentación verificable sin desplegar el sistema.</td></tr>
+<tr><td><span class="pill inh">Heredado</span></td><td>Lo resuelve un servicio administrado externo. <b>No se usa en esta versión</b> — a diferencia del ejemplo visto en clase, este diseño no delega en un proveedor de identidad ni de borde, así que no hay ningún requisito en este estado.</td></tr>
+<tr><td><span class="pill pen">Pendiente</span></td><td>El requisito describe un comportamiento de la aplicación en ejecución (código, configuración fina, datos ya cargados) que no se puede confirmar desde un diseño no desplegado.</td></tr>
+<tr><td><span class="pill na">N.A.</span></td><td>El componente o escenario no existe en el alcance declarado (2.5), con su justificación.</td></tr>
+</tbody>
+</table>
+
+<h4>4.2 Resultados de ASVS 5.0.0</h4>
+<p>De los <b>70 requisitos L1</b>, <b>26 pasan por diseño</b> (37&nbsp;%), <b>37 quedan Pendiente</b> de verificar en código o configuración (53&nbsp;%) y <b>7 no aplican</b> (10&nbsp;%) a este sistema. El detalle completo, requisito por requisito, está en el Anexo A.</p>
+<p>El patrón no es casualidad: los capítulos que son decisiones de <i>arquitectura</i> — V7 Session Management, V8 Authorization, V9 Self-contained Tokens, V11 Cryptography, V12 Secure Communication — pasan casi en su totalidad, porque son exactamente las decisiones que ya tomé al diseñar el flujo de tokens y la matriz de roles. Los capítulos que piden <i>comportamiento verificado en código</i> — V3 Web Frontend Security, buena parte de V6 Authentication (composición de contraseña, campos del formulario) — quedan Pendiente casi en su totalidad, porque ninguna decisión de diseño por sí sola prueba que el formulario real enmascara el campo o que el backend compara la contraseña sin truncarla.</p>
+
+<h4>4.3 Hallazgos principales</h4>
+<ul>
+<li><b>El hallazgo central (v5.0.0-9.1.3):</b> el diseño valida la firma del token (<code>v5.0.0-9.1.1</code>, Cumple) pero no especifica de dónde sale ni cómo se distribuye la llave de verificación. Es exactamente la causa raíz del caso Coupang — una llave de firma que siguió siendo válida después de que su dueño se fue — y es el único punto donde el diseño actual, tal como está escrito, repetiría ese incidente.</li>
+<li><b>V16 (Security Logging) no tiene requisitos L1</b> en ASVS 5.0.0 — ninguno. Las amenazas de repudio y de falta de detección que genera el <code>.tm7</code> (punto 5, Tabla 1) no se cierran con una verificación L1, sin importar qué tan bien esté diseñado el sistema.</li>
+<li><b>V5 (carga de archivos) queda Pendiente en bloque:</b> un marketplace real necesita que el vendedor suba imágenes de producto, y esa pieza nunca se diseñó. No es una omisión de esta verificación: es un vacío real del proyecto que esta verificación deja visible en vez de ocultar.</li>
+</ul>
+</section>
+
+<!-- ======================= PÁGINA 5 — EVIDENCIA ======================= -->
+<section class="pg">
+<h3><span class="secnum">5.</span> Evidencia</h3>
+
+<h4>5.1 Retiro atómico (v5.0.0-2.2.1 / 2.2.2)</h4>
+<p>La evidencia de la amenaza 1 (Tabla 1) es la misma regla propuesta en la Entrega 2: el retiro se valida y se aplica en una sola operación atómica en la base de datos, no en dos pasos separados que una segunda petición concurrente pueda intercalar.</p>
+<pre>UPDATE cuentas SET saldo = saldo - :monto
+WHERE id = :id AND saldo &gt;= :monto;
+-- 0 filas afectadas: rechazar el retiro
+-- Red de seguridad adicional: CHECK (saldo &gt;= 0)</pre>
+<p>La Figura 2 muestra por qué separar "leer el saldo" de "descontarlo" — el patrón que perdió a Silk Road más de 50.000 BTC (Amick, 2022) — no resiste dos peticiones concurrentes, y por qué el <code>UPDATE</code> atómico sí.</p>
+
+<div class="fig">
+<svg viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="race-title race-desc">
+  <title id="race-title">Condición de carrera en el retiro frente al UPDATE atómico</title>
+  <desc id="race-desc">Dos trazas pareadas: dos retiros concurrentes de 80 sobre un saldo de 100 sin control de concurrencia terminan en saldo negativo; con un UPDATE atómico con condición WHERE saldo mayor o igual al monto, la segunda petición se rechaza con cero filas afectadas y el saldo queda correcto.</desc>
+  <defs>
+    <marker id="arrow2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8a919c"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <!-- Lane headers -->
+  <rect x="80" y="20" width="280" height="26" rx="6" fill="#f5f6f8" stroke="#d9dde2" stroke-width="1"/>
+  <text x="220" y="38" fill="#14171c" font-size="11" font-weight="700" text-anchor="middle">A· Sin control de concurrencia</text>
+  <rect x="460" y="20" width="280" height="26" rx="6" fill="#fbeceb" stroke="#b3261e" stroke-width="1"/>
+  <text x="600" y="38" fill="#8a3f3a" font-size="11" font-weight="700" text-anchor="middle">B· UPDATE atómico con CHECK</text>
+
+  <!-- ===== Stage 1 ===== -->
+  <text x="80" y="64" fill="#8a919c" font-size="8" font-weight="700" letter-spacing="0.06em">1 · VERIFICA SALDO DISPONIBLE (100)</text>
+  <line x1="220" y1="124" x2="220" y2="140" stroke="#8a919c" stroke-width="1.2" marker-end="url(#arrow2)"/>
+  <line x1="600" y1="124" x2="600" y2="140" stroke="#8a919c" stroke-width="1.2" marker-end="url(#arrow2)"/>
+
+  <rect x="80" y="68" width="280" height="56" rx="6" fill="#ffffff" stroke="#d9dde2" stroke-width="1"/>
+  <text x="100" y="90" fill="#14171c" font-size="9.5" font-weight="700">PASS</text>
+  <text x="100" y="105" fill="#5b6470" font-size="8.5">Lee saldo = 100 (sin bloqueo)</text>
+
+  <rect x="460" y="68" width="280" height="56" rx="6" fill="#ffffff" stroke="#d9dde2" stroke-width="1"/>
+  <text x="480" y="90" fill="#14171c" font-size="9.5" font-weight="700">PASS</text>
+  <text x="480" y="105" fill="#5b6470" font-size="8.5">UPDATE … WHERE saldo≥80</text>
+  <text x="480" y="117" fill="#5b6470" font-size="8.5">1 fila afectada → saldo 20</text>
+
+  <!-- ===== Stage 2 (first divergence) ===== -->
+  <text x="80" y="156" fill="#8a919c" font-size="8" font-weight="700" letter-spacing="0.06em">2 · SEGUNDA PETICIÓN CONCURRENTE (MONTO 80)</text>
+  <text x="620" y="156" fill="#b3261e" font-size="8" font-weight="700" letter-spacing="0.04em">◄ PRIMERA DIVERGENCIA</text>
+  <line x1="220" y1="216" x2="220" y2="232" stroke="#8a919c" stroke-width="1.2" marker-end="url(#arrow2)"/>
+  <line x1="600" y1="216" x2="600" y2="232" stroke="#8a919c" stroke-width="1.2" marker-end="url(#arrow2)"/>
+
+  <rect x="80" y="160" width="280" height="56" rx="6" fill="#ffffff" stroke="#d9dde2" stroke-width="1"/>
+  <text x="100" y="182" fill="#14171c" font-size="9.5" font-weight="700">PASS</text>
+  <text x="100" y="197" fill="#5b6470" font-size="8.5">Lee saldo = 100</text>
+  <text x="100" y="209" fill="#5b6470" font-size="8.5">(mismo valor, concurrente)</text>
+
+  <rect x="460" y="160" width="280" height="56" rx="6" fill="#fbeceb" stroke="#b3261e" stroke-width="1.2"/>
+  <text x="480" y="182" fill="#b3261e" font-size="9.5" font-weight="700">FAIL</text>
+  <text x="480" y="197" fill="#8a3f3a" font-size="8.5">UPDATE … WHERE saldo≥80</text>
+  <text x="480" y="209" fill="#8a3f3a" font-size="8.5">0 filas → rechazada</text>
+
+  <!-- ===== Stage 3 ===== -->
+  <text x="80" y="248" fill="#8a919c" font-size="8" font-weight="700" letter-spacing="0.06em">3 · APLICA EL RETIRO</text>
+  <line x1="220" y1="308" x2="220" y2="324" stroke="#8a919c" stroke-width="1.2" marker-end="url(#arrow2)"/>
+  <line x1="600" y1="308" x2="600" y2="324" stroke="#8a919c" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow2)"/>
+
+  <rect x="80" y="252" width="280" height="56" rx="6" fill="#ffffff" stroke="#d9dde2" stroke-width="1"/>
+  <text x="100" y="274" fill="#14171c" font-size="9.5" font-weight="700">PASS</text>
+  <text x="100" y="289" fill="#5b6470" font-size="8.5">Resta 80 sobre su copia</text>
+  <text x="100" y="301" fill="#5b6470" font-size="8.5">de 100, sin ver a R2</text>
+
+  <rect x="460" y="252" width="280" height="56" rx="6" fill="#fafafa" stroke="#d9dde2" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="480" y="274" fill="#8a919c" font-size="9.5" font-weight="700">NOT REACHED</text>
+  <text x="480" y="289" fill="#8a919c" font-size="8.5">el paso 2 ya resolvió</text>
+  <text x="480" y="301" fill="#8a919c" font-size="8.5">la operación en un solo tiempo</text>
+
+  <!-- ===== Stage 4: outcomes ===== -->
+  <text x="80" y="340" fill="#8a919c" font-size="8" font-weight="700" letter-spacing="0.06em">4 · RESULTADO</text>
+
+  <rect x="80" y="344" width="280" height="56" rx="6" fill="#fbeceb" stroke="#b3261e" stroke-width="1.2"/>
+  <text x="100" y="368" fill="#8a3f3a" font-size="8.5">Saldo final</text>
+  <text x="100" y="386" fill="#b3261e" font-size="13" font-weight="700">-60 · fuga de fondos</text>
+
+  <rect x="460" y="344" width="280" height="56" rx="6" fill="#ffffff" stroke="#14171c" stroke-width="1.2"/>
+  <text x="480" y="368" fill="#5b6470" font-size="8.5">Saldo final</text>
+  <text x="480" y="386" fill="#14171c" font-size="13" font-weight="700">20 · correcto</text>
+
+  <!-- Legend -->
+  <line x1="80" y1="420" x2="740" y2="420" stroke="rgba(20,23,28,0.12)" stroke-width="0.8"/>
+  <text x="80" y="436" fill="#5b6470" font-size="8" letter-spacing="0.12em" font-weight="700">LEYENDA</text>
+  <rect x="80" y="450" width="14" height="10" rx="2" fill="#ffffff" stroke="#d9dde2" stroke-width="1"/>
+  <text x="100" y="459" fill="#5b6470" font-size="8.5">PASS</text>
+  <rect x="170" y="450" width="14" height="10" rx="2" fill="#fbeceb" stroke="#b3261e" stroke-width="1"/>
+  <text x="190" y="459" fill="#5b6470" font-size="8.5">FAIL / resultado crítico</text>
+  <rect x="380" y="450" width="14" height="10" rx="2" fill="#fafafa" stroke="#d9dde2" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="400" y="459" fill="#5b6470" font-size="8.5">NOT REACHED</text>
+</svg>
+<div class="cap"><b>Figura 2.</b> Dos retiros concurrentes de 80 sobre un saldo de 100: sin control de concurrencia ambos pasan y el saldo queda en -60; con el <code>UPDATE</code> atómico, el segundo se rechaza con 0 filas afectadas y el saldo queda en 20. Elaboración propia.</div>
+</div>
+
+<h4>5.2 Otros controles ya documentados</h4>
+<ul>
+<li><b>v5.0.0-6.1.1 / 6.1.1 (cuentas falsas, amenaza 2):</b> límite de tasa por cuenta e IP, WAF y fail2ban contra registro masivo y fuerza bruta — documentado en la Entrega 2, visto en clase.</li>
+<li><b>v5.0.0-7.4.1 y 7.4.2 (secretos y personas, amenazas 3 y 4):</b> rotación de la llave de firma y terminación de todas las sesiones activas el día de la baja de una cuenta — la misma decisión de la Entrega 2 ("revocación el día de la baja"), ahora mapeada a su requisito exacto.</li>
+<li><b>v5.0.0-8.1.1 / 8.2.1 / 8.2.2 (amenaza 1, BOLA):</b> la matriz de roles (Tabla 2) y la regla de que Pedidos filtra siempre por el comprador o vendedor autenticado.</li>
+<li><b>v5.0.0-11.3.1 / 11.3.2 / 11.4.1 y v5.0.0-12.1.1 / 12.2.1 / 12.2.2:</b> decisiones de línea base — TLS 1.2/1.3 en todo el borde, AES-GCM, sin MD5 ni modos inseguros.</li>
+</ul>
+</section>
+
+<!-- ======================= PÁGINA 6 — REPORTE ======================= -->
+<section class="pg">
+<h3><span class="secnum">6.</span> Reporte</h3>
+
+<h4>6.1 Resumen</h4>
+<p>70 requisitos L1 evaluados: <b>26 Cumple</b>, <b>0 Heredado</b>, <b>37 Pendiente</b>, <b>7 N.A.</b> Para efectos del taller, un requisito pasa en Cumple o Heredado y falla en Brecha; Pendiente no se cuenta como aprobado ni como reprobado — el control está definido, falta demostrarlo en código. No hay ningún requisito en Brecha: donde el diseño no resolvía algo, la opción fue definirlo ahora (y queda Cumple con esa decisión) o dejarlo Pendiente de forma explícita, nunca darlo por bueno sin evidencia.</p>
+
+<h4>6.2 Excepciones</h4>
+<ul>
+<li><b>AISVS:</b> no se evaluó. El marketplace no tiene componentes de IA; forzar la evaluación habría significado inventar un asistente o un modelo de fraude que el proyecto no tiene.</li>
+<li><b>V16 Security Logging:</b> 0 requisitos L1 en ASVS 5.0.0. La amenaza 5 (detectar y responder) queda sin cierre posible en este nivel — ver 6.4.</li>
+<li><b>Gestión de secretos (vault, rotación programada):</b> es nivel 2 en ASVS 5.0.0 (<code>v5.0.0-13.3.1</code>, <code>13.3.2</code>), no nivel 1. V13 solo tiene un requisito L1 (metadatos de control de versiones), que sí se cumple.</li>
+</ul>
+
+<h4>6.3 Plan de remediación</h4>
+<table class="std">
+<thead><tr><th style="width:26%">Prioridad</th><th style="width:38%">Acción</th><th style="width:36%">Cuándo</th></tr></thead>
+<tbody>
+<tr><td class="n">1 · v5.0.0-9.1.3</td><td>Especificar el origen y la distribución controlada de la llave de verificación de tokens (vault, rotación operativa, no solo el algoritmo).</td><td>Antes de implementar login — cierra el hallazgo central (4.3)</td></tr>
+<tr><td class="n">2 · V5 completo</td><td>Diseñar la carga de imágenes de producto (tamaño, tipo real de archivo, carpeta no ejecutable) y evaluar sus 4 requisitos L1.</td><td>Antes de construir el catálogo</td></tr>
+<tr><td class="n">3 · tm7</td><td>Triar las 69 amenazas <i>Not Started</i> restantes del modelo (estado, prioridad, justificación), no solo las 5 priorizadas aquí.</td><td>Siguiente iteración del modelo</td></tr>
+<tr><td class="n">4 · V3 / V6.2</td><td>Fijar la configuración fina pendiente: cabeceras (HSTS, CORS, CSP), cookies y los detalles de comportamiento del formulario de contraseña.</td><td>Al construir el frontend</td></tr>
+</tbody>
+</table>
+
+<h4>6.4 Ruta hacia L2</h4>
+<p>Un marketplace que mueve dinero de terceros y datos personales protegidos por la Ley 1581 de 2012 es, por la propia definición de niveles de ASVS, un sistema L2. Tres de los refuerzos L2/L3 ya identificados en este ejercicio apuntan exactamente a los puntos más débiles de la Tabla 1: <code>v5.0.0-2.3.4</code> (bloqueos de negocio contra doble reserva, refuerzo del retiro atómico), <code>v5.0.0-11.1.1</code> (ciclo de vida documentado de llaves criptográficas, cierre definitivo de la amenaza 2/3) y <code>v5.0.0-13.3.1</code>/<code>13.3.2</code> (gestor de secretos con mínimo privilegio). Ninguno de los tres existe en L1 — por eso una verificación L1, aunque pase, no es suficiente para un sistema con este perfil de riesgo.</p>
+</section>
+
+<!-- ======================= PÁGINA 7 — CONCLUSIONES Y REFERENCIAS ======================= -->
+<section class="pg">
+<h3><span class="secnum">7.</span> Conclusiones</h3>
+<p>El marketplace de la Entrega 2 pasa 26 de 70 requisitos L1 por diseño, sin ningún requisito en Brecha abierta: donde faltaba una decisión barata de tomar (política de contraseñas, algoritmo de cifrado, plazos de remediación), se tomó aquí mismo; donde faltaba algo que solo el código puede probar, quedó Pendiente y declarado. El hallazgo que más importa no es un número: es que el único requisito de verdad sin resolver en el núcleo de autenticación — de dónde sale la llave que valida los tokens — es exactamente la causa que tumbó a Coupang. Verificar contra un estándar sirve para eso: convertir una lección aprendida de otro incidente en un requisito con nombre propio en el propio diseño, en vez de una anécdota.</p>
+<p>El ejercicio también confirma algo que ya sabía por la Entrega 1: un proyecto pequeño y honesto sobre lo que no ha resuelto vale más, para una verificación de seguridad, que uno grande que da por buenos requisitos que el sistema real no cumple.</p>
+
+<div class="refs">
+<h3>Referencias</h3>
+<div class="cols">
+<p class="r">Aegerter, G. (2013, 2 de octubre). <i>End of Silk Road: Slip-ups in building Internet drug market led to Ross Ulbricht, court documents say</i>. NBC News. https://www.nbcnews.com/news/world/end-silk-road-slip-ups-building-internet-drug-market-led-flna8C11326181</p>
+<p class="r">Amick, S. (2022, 7 de noviembre). <i>U.S. Department of Justice seized over $3.36 billion in bitcoin tied to Silk Road</i>. Bitcoin Magazine. https://bitcoinmagazine.com/markets/us-department-of-justice-seizes-over-3-billion-bitcoin</p>
+<p class="r">Biggs, J. (2014, 13 de febrero). <i>Silk Road 2 hacked, over 4,000 bitcoin allegedly stolen</i>. TechCrunch. https://techcrunch.com/2014/02/13/silk-road-2-hacked-88000-bitcoin-allegedly-stolen</p>
+<p class="r">Congreso de la República de Colombia. (2012). <i>Ley Estatutaria 1581 de 2012, por la cual se dictan disposiciones generales para la protección de datos personales</i>. Diario Oficial No. 48.587.</p>
+<p class="r">Gatlan, S. (2026, 11 de junio). <i>Coupang hit with record $409 million data breach fine in Korea</i>. BleepingComputer. https://www.bleepingcomputer.com/news/security/south-korea-hits-coupang-with-record-409-million-fine-over-data-breach/</p>
+<p class="r">Lee, J.-S. (2026, 11 de junio). <i>Coupang hit with record 624.6 billion won fine over data breach of 37.5 million</i>. Seoul Economic Daily. https://en.sedaily.com/technology/2026/06/11/coupang-hit-with-record-6246-billion-won-fine-over-data</p>
+<p class="r">OWASP Foundation. (2025). <i>OWASP Application Security Verification Standard 5.0.0</i>. https://github.com/OWASP/ASVS</p>
+<p class="r">OWASP Foundation. (2025). <i>OWASP Top 10:2025</i>. https://top10.owasp.org/2025/0x00_2025-Introduction</p>
+<p class="r">OWASP Foundation. (2026). <i>OWASP Artificial Intelligence Security Verification Standard (AISVS) 1.01</i>. https://github.com/OWASP/AISVS</p>
+<p class="r">Schneier, B. (2014, 20 de octubre). <i>How did the feds identity [sic] Dread Pirate Roberts?</i> Schneier on Security. https://www.schneier.com/blog/archives/2014/10/how_did_the_fed.html</p>
+<p class="r">Tarbell, C. (2014, 5 de septiembre). <i>Declaration of Christopher Tarbell</i> (S1 14 Cr. 68 (KBF)) [Declaración jurada]. U.S. District Court, Southern District of New York. https://www.emptywheel.net/wp-content/uploads/2014/10/140905-Tarbell-Declaration.pdf</p>
+<p class="r">Yang, H., y Jin, H. (2026, 10 de febrero). <i>South Korea blames Coupang data breach on management failure, not sophisticated attack</i>. Reuters. https://finance.yahoo.com/news/south-korea-says-coupang-must-051616142.html</p>
+</div>
+</div>
+</section>
+
+<!-- ======================= ANEXO A ======================= -->
+<section class="pg">
+<h3>Anexo A. Matriz completa de verificación — ASVS 5.0.0, nivel 1 (70 requisitos)</h3>
+<p class="small" style="margin-bottom:8px">Descripciones resumidas en español; el texto oficial de cada requisito está en el repositorio del estándar (OWASP Foundation, 2025). 26 Cumple · 0 Heredado · 37 Pendiente · 7 N.A.</p>
+<table class="annex">
+<thead><tr><th class="rid">Requisito</th><th class="rdesc">Descripción (resumen)</th><th class="rstate">Estado</th><th class="rjust">Justificación</th></tr></thead>
+<tbody><tr class="chap"><td colspan="4">V1 &middot; Encoding and Sanitization</td></tr>
+<tr><td class="rid">v5.0.0-1.2.1</td><td class="rdesc">Codificar la salida segun el contexto (HTML, atributo, CSS, cabecera) en cada respuesta.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Codificacion de salida por contexto: se verifica en el framework/codigo, no en el diseño.</td></tr>
+<tr><td class="rid">v5.0.0-1.2.2</td><td class="rdesc">Codificar los datos no confiables al construir URLs; solo protocolos seguros (no javascript:/data:).</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Codificacion de URLs dinamicas: se verifica en codigo.</td></tr>
+<tr><td class="rid">v5.0.0-1.2.3</td><td class="rdesc">Codificar o escapar al construir JavaScript/JSON dinamico.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Codificacion de contenido JS/JSON dinamico: se verifica en codigo.</td></tr>
+<tr><td class="rid">v5.0.0-1.2.4</td><td class="rdesc">Consultas parametrizadas u ORM para SQL/NoSQL; nunca concatenar entrada del usuario.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Consultas parametrizadas (anti-SQLi): se verifica en el ORM/consultas reales.</td></tr>
+<tr><td class="rid">v5.0.0-1.2.5</td><td class="rdesc">Proteger contra inyeccion de comandos del sistema operativo.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Anti-inyeccion de comandos de SO: no hay llamadas a SO documentadas; se verifica en codigo si llegan a existir.</td></tr>
+<tr><td class="rid">v5.0.0-1.3.1</td><td class="rdesc">Sanitizar con una libreria conocida el HTML que llega de editores enriquecidos.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Sanitizacion de HTML de terceros (p. ej. descripciones de producto): se verifica en codigo/libreria.</td></tr>
+<tr><td class="rid">v5.0.0-1.3.2</td><td class="rdesc">Evitar eval() u otra ejecucion dinamica de codigo con entrada de usuario.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Uso de eval()/codigo dinamico: se verifica en codigo.</td></tr>
+<tr><td class="rid">v5.0.0-1.5.1</td><td class="rdesc">Parsers XML con configuracion restrictiva (sin entidades externas, anti-XXE).</td><td class="rstate"><span class="pill na">N.A.</span></td><td class="rjust">El diseño no incluye facturacion electronica ni otro insumo XML (ver 2.5); no hay parser XML en el alcance.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V2 &middot; Validation and Business Logic</td></tr>
+<tr><td class="rid">v5.0.0-2.1.1</td><td class="rdesc">Documentar las reglas de validacion esperadas para cada tipo de dato.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Falta un documento general de reglas de validacion por campo; solo esta especificada la regla del retiro (ver 2.2.1).</td></tr>
+<tr><td class="rid">v5.0.0-2.2.1</td><td class="rdesc">Validar la entrada contra reglas de negocio (lista positiva o limites logicos).</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Retiro atomico: UPDATE saldo=saldo-:monto WHERE saldo&gt;=:monto valida la decision de negocio critica antes de aplicarla (evidencia 5.1).</td></tr>
+<tr><td class="rid">v5.0.0-2.2.2</td><td class="rdesc">Forzar la validacion en una capa de servicio confiable, no solo en el cliente.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">La misma regla se aplica en la base de datos (capa de servicio confiable), no en el navegador.</td></tr>
+<tr><td class="rid">v5.0.0-2.3.1</td><td class="rdesc">Procesar los flujos de negocio solo en el orden secuencial esperado, sin saltar pasos.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Orden secuencial del flujo de checkout: no se diseño en este ejercicio.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V3 &middot; Web Frontend Security</td></tr>
+<tr><td class="rid">v5.0.0-3.2.1</td><td class="rdesc">Evitar que el navegador renderice una respuesta fuera de su contexto previsto.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Cabeceras Sec-Fetch-* / Content-Disposition: configuracion fina del borde, no decidida aun.</td></tr>
+<tr><td class="rid">v5.0.0-3.2.2</td><td class="rdesc">Mostrar contenido como texto (no HTML) con funciones seguras de render.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Render seguro de texto no confiable (reseñas, nombres de producto): se verifica en el frontend real.</td></tr>
+<tr><td class="rid">v5.0.0-3.3.1</td><td class="rdesc">Cookies con atributo Secure y prefijo __Host-/__Secure-.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Atributo Secure/prefijo __Host- en cookies: configuracion de sesion pendiente de fijar.</td></tr>
+<tr><td class="rid">v5.0.0-3.4.1</td><td class="rdesc">Cabecera Strict-Transport-Security (HSTS) en todas las respuestas.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Cabecera HSTS: depende del borde/CDN elegido, no decidido en este ejercicio.</td></tr>
+<tr><td class="rid">v5.0.0-3.4.2</td><td class="rdesc">Access-Control-Allow-Origin fijo o validado contra una lista blanca de origenes.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Lista blanca de origenes CORS: no definida.</td></tr>
+<tr><td class="rid">v5.0.0-3.5.1</td><td class="rdesc">Mitigar CSRF en funciones sensibles cuando no se depende del preflight CORS.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Token/cabecera anti-CSRF: no definido.</td></tr>
+<tr><td class="rid">v5.0.0-3.5.2</td><td class="rdesc">Si se depende del preflight CORS, impedir llamadas que no lo disparen.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Validacion de preflight CORS: no definida.</td></tr>
+<tr><td class="rid">v5.0.0-3.5.3</td><td class="rdesc">Usar metodos HTTP no “seguros” (POST/PUT/PATCH/DELETE) para funciones sensibles.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Metodos HTTP por sensibilidad (POST/PUT/DELETE vs GET): no auditado.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V4 &middot; API and Web Service</td></tr>
+<tr><td class="rid">v5.0.0-4.1.1</td><td class="rdesc">Cabecera Content-Type correcta (con charset) en cada respuesta con cuerpo.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Cabecera Content-Type correcta en cada respuesta: se verifica en la API real.</td></tr>
+<tr><td class="rid">v5.0.0-4.4.1</td><td class="rdesc">Usar WebSocket solo sobre TLS (WSS).</td><td class="rstate"><span class="pill na">N.A.</span></td><td class="rjust">El diseño no usa WebSocket (catalogo, pedidos y pagos son solo HTTP/HTTPS).</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V5 &middot; File Handling</td></tr>
+<tr><td class="rid">v5.0.0-5.2.1</td><td class="rdesc">Limitar el tamano de archivo aceptado para evitar denegacion de servicio.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Limite de tamaño de archivo: la carga de imagenes de producto no se diseño en este ejercicio (ver 2.5).</td></tr>
+<tr><td class="rid">v5.0.0-5.2.2</td><td class="rdesc">Validar que el contenido real del archivo coincide con su extension declarada.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Validacion de tipo real de archivo (magic bytes): idem, fuera de este ejercicio.</td></tr>
+<tr><td class="rid">v5.0.0-5.3.1</td><td class="rdesc">Los archivos subidos a una carpeta publica no se ejecutan como codigo del servidor.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Archivos subidos no ejecutables como codigo: idem.</td></tr>
+<tr><td class="rid">v5.0.0-5.3.2</td><td class="rdesc">Construir rutas de archivo con datos internos, no con nombres del usuario (anti path traversal/SSRF).</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Rutas de archivo sin datos de usuario (anti path traversal/SSRF): idem.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V6 &middot; Authentication</td></tr>
+<tr><td class="rid">v5.0.0-6.1.1</td><td class="rdesc">Documentar como se usan rate limiting y anti-automatizacion contra fuerza bruta.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Documentado en Entrega 2 (punto 2): limite de tasa por cuenta e IP, WAF y fail2ban contra fuerza bruta y registro masivo.</td></tr>
+<tr><td class="rid">v5.0.0-6.2.1</td><td class="rdesc">Contrasenas de al menos 8 caracteres (se recomienda 15).</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Longitud minima de contraseña: valor de configuracion aun no fijado en el proveedor de credenciales.</td></tr>
+<tr><td class="rid">v5.0.0-6.2.2</td><td class="rdesc">El usuario puede cambiar su contrasena.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Funcion de cambio de contraseña: se verifica en la aplicacion real.</td></tr>
+<tr><td class="rid">v5.0.0-6.2.3</td><td class="rdesc">Cambiar la contrasena exige la actual y la nueva.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Exigir contraseña actual y nueva al cambiarla: se verifica en codigo.</td></tr>
+<tr><td class="rid">v5.0.0-6.2.4</td><td class="rdesc">Rechazar contrasenas presentes en una lista de al menos 3000 filtradas.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Verificacion contra lista de contraseñas filtradas: integracion no definida.</td></tr>
+<tr><td class="rid">v5.0.0-6.2.5</td><td class="rdesc">No imponer reglas de composicion (mayusculas, numeros, simbolos obligatorios).</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Ausencia de reglas de composicion restrictivas: se verifica en el formulario real.</td></tr>
+<tr><td class="rid">v5.0.0-6.2.6</td><td class="rdesc">Campo de contrasena enmascarado (type=password).</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Campo tipo password en el formulario: se verifica en el frontend real.</td></tr>
+<tr><td class="rid">v5.0.0-6.2.7</td><td class="rdesc">Permitir pegar la contrasena y el uso de gestores de contrasenas.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Permitir pegar y gestores de contraseña (sin JS que lo bloquee): se verifica en el frontend real.</td></tr>
+<tr><td class="rid">v5.0.0-6.2.8</td><td class="rdesc">Verificar la contrasena exactamente como se recibe, sin truncar ni transformar.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Comparacion exacta de contraseña sin truncar/transformar: se verifica en el backend real.</td></tr>
+<tr><td class="rid">v5.0.0-6.3.1</td><td class="rdesc">Implementar en el sistema real los controles anti fuerza bruta ya documentados.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Que lo implementado coincida con lo documentado en 6.1.1: requiere el sistema desplegado.</td></tr>
+<tr><td class="rid">v5.0.0-6.3.2</td><td class="rdesc">Sin cuentas por defecto (root/admin/sa) presentes o sin deshabilitar.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Ausencia de cuentas por defecto (root/admin/sa): se verifica en el entorno desplegado.</td></tr>
+<tr><td class="rid">v5.0.0-6.4.1</td><td class="rdesc">Contrasenas o codigos iniciales generados por el sistema, aleatorios y de corta vigencia.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Expiracion de contraseñas/codigos iniciales: comportamiento a verificar en codigo.</td></tr>
+<tr><td class="rid">v5.0.0-6.4.2</td><td class="rdesc">Sin preguntas secretas ni pistas de contrasena.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: no se usan preguntas secretas; el restablecimiento es por enlace de un solo uso al correo verificado.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V7 &middot; Session Management</td></tr>
+<tr><td class="rid">v5.0.0-7.2.1</td><td class="rdesc">La verificacion de la sesion ocurre en un servicio backend confiable.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de arquitectura: la verificacion de sesion ocurre en un servicio backend, nunca solo en el cliente.</td></tr>
+<tr><td class="rid">v5.0.0-7.2.2</td><td class="rdesc">Tokens de sesion dinamicos, no claves API estaticas.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de arquitectura: tokens autocontenidos generados dinamicamente por sesion, sin claves API estaticas.</td></tr>
+<tr><td class="rid">v5.0.0-7.2.3</td><td class="rdesc">Tokens de referencia generados con CSPRNG y al menos 128 bits de entropia.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Entropia/CSPRNG de tokens de referencia: no se usan tokens de referencia en este diseño (solo autocontenidos); verificar si se introducen.</td></tr>
+<tr><td class="rid">v5.0.0-7.2.4</td><td class="rdesc">Emitir un token nuevo en cada autenticacion o reautenticacion.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de arquitectura: se emite un token nuevo en cada autenticacion o reautenticacion, invalidando el anterior.</td></tr>
+<tr><td class="rid">v5.0.0-7.4.1</td><td class="rdesc">Invalidar de verdad la sesion al cerrarla (lista de revocados o rotacion de llave).</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Resuelve el hallazgo de Coupang (punto 2): rotacion de la llave de firma por usuario/servicio al revocar, documentado en Entrega 2 ('revocacion el dia de la baja').</td></tr>
+<tr><td class="rid">v5.0.0-7.4.2</td><td class="rdesc">Terminar todas las sesiones activas al deshabilitar o eliminar una cuenta.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Resuelve el hallazgo de personas con acceso (punto 4): terminar todas las sesiones activas al deshabilitar una cuenta, documentado en Entrega 2 ('baja verificada').</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V8 &middot; Authorization</td></tr>
+<tr><td class="rid">v5.0.0-8.1.1</td><td class="rdesc">Documentar las reglas de autorizacion por funcion y por dato.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Esta verificacion documenta las reglas de autorizacion por rol y recurso (Tabla 3, seccion 3.3).</td></tr>
+<tr><td class="rid">v5.0.0-8.2.1</td><td class="rdesc">Restringir el acceso a nivel de funcion a permisos explicitos.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">La matriz de roles restringe cada accion a permisos explicitos por rol (Tabla 3).</td></tr>
+<tr><td class="rid">v5.0.0-8.2.2</td><td class="rdesc">Restringir el acceso a nivel de dato (anti-IDOR/BOLA).</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de arquitectura: Pedidos y Catalogo filtran por el vendedor o comprador autenticado; anti-BOLA/IDOR por diseño.</td></tr>
+<tr><td class="rid">v5.0.0-8.3.1</td><td class="rdesc">Aplicar la autorizacion en el servidor, nunca solo en JavaScript del cliente.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de arquitectura: las reglas de autorizacion se aplican en el backend, nunca en JavaScript del cliente.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V9 &middot; Self-contained Tokens</td></tr>
+<tr><td class="rid">v5.0.0-9.1.1</td><td class="rdesc">Validar la firma/MAC del token autocontenido antes de confiar en su contenido.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Los tokens se validan por firma/MAC antes de aceptar su contenido (ya era cierto en el caso Coupang; el fallo estaba en el ciclo de vida de la llave, no aqui).</td></tr>
+<tr><td class="rid">v5.0.0-9.1.2</td><td class="rdesc">Restringir los algoritmos de firma a una lista blanca; nunca aceptar ‘none’.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: un unico algoritmo de firma permitido en la lista blanca; se rechaza 'none'.</td></tr>
+<tr><td class="rid">v5.0.0-9.1.3</td><td class="rdesc">La llave de verificacion viene solo de fuentes preconfiguradas y confiables.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Brecha real identificada: falta especificar el origen/distribucion controlada de la llave de verificacion y su rotacion operativa (causa raiz del caso Coupang).</td></tr>
+<tr><td class="rid">v5.0.0-9.2.1</td><td class="rdesc">Validar la vigencia del token (exp/nbf) en cada verificacion.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: se valida la vigencia del token (exp/nbf) en cada verificacion.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V10 &middot; OAuth and OIDC</td></tr>
+<tr><td class="rid">v5.0.0-10.4.1</td><td class="rdesc">Validar la redirect URI contra una lista blanca exacta por cliente.</td><td class="rstate"><span class="pill na">N.A.</span></td><td class="rjust">El diseño no delega el login a un proveedor externo via OAuth/OIDC (autenticacion propia, ver 2.4).</td></tr>
+<tr><td class="rid">v5.0.0-10.4.2</td><td class="rdesc">El codigo de autorizacion se usa una sola vez; revocar tokens si se reutiliza.</td><td class="rstate"><span class="pill na">N.A.</span></td><td class="rjust">Idem: no hay flujo de autorizacion OAuth en este diseño.</td></tr>
+<tr><td class="rid">v5.0.0-10.4.3</td><td class="rdesc">Codigo de autorizacion de vida corta (hasta 10 min en L1/L2).</td><td class="rstate"><span class="pill na">N.A.</span></td><td class="rjust">Idem.</td></tr>
+<tr><td class="rid">v5.0.0-10.4.4</td><td class="rdesc">Cada cliente solo puede usar los grants que necesita; sin ‘implicit’ ni ‘password’.</td><td class="rstate"><span class="pill na">N.A.</span></td><td class="rjust">Idem.</td></tr>
+<tr><td class="rid">v5.0.0-10.4.5</td><td class="rdesc">Mitigar la repeticion del refresh token en clientes publicos.</td><td class="rstate"><span class="pill na">N.A.</span></td><td class="rjust">Idem.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V11 &middot; Cryptography</td></tr>
+<tr><td class="rid">v5.0.0-11.3.1</td><td class="rdesc">Sin modos de cifrado inseguros (ECB) ni relleno PKCS#1 v1.5.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: se prohiben modos inseguros (ECB) y relleno PKCS#1 v1.5.</td></tr>
+<tr><td class="rid">v5.0.0-11.3.2</td><td class="rdesc">Solo cifradores y modos aprobados (p. ej. AES-GCM).</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: cifrado solo con AES-GCM.</td></tr>
+<tr><td class="rid">v5.0.0-11.4.1</td><td class="rdesc">Solo funciones de hash aprobadas; MD5 prohibido para uso criptografico.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: solo funciones de hash aprobadas (p. ej. bcrypt/Argon2 para contraseñas); MD5 prohibido.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V12 &middot; Secure Communication</td></tr>
+<tr><td class="rid">v5.0.0-12.1.1</td><td class="rdesc">Solo versiones recientes de TLS habilitadas (1.2/1.3).</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: solo TLS 1.2/1.3 habilitados en todo el borde.</td></tr>
+<tr><td class="rid">v5.0.0-12.2.1</td><td class="rdesc">TLS en toda conexion externa, sin caer a texto plano.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: toda conexion externa usa TLS, sin caida a texto plano.</td></tr>
+<tr><td class="rid">v5.0.0-12.2.2</td><td class="rdesc">Certificados TLS de una autoridad publicamente confiable.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de diseño: certificados TLS de una autoridad publicamente confiable.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V13 &middot; Configuration</td></tr>
+<tr><td class="rid">v5.0.0-13.4.1</td><td class="rdesc">Sin metadatos de control de versiones (.git/.svn) accesibles en produccion.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de despliegue: sin carpetas .git/.svn accesibles en produccion.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V14 &middot; Data Protection</td></tr>
+<tr><td class="rid">v5.0.0-14.2.1</td><td class="rdesc">Datos sensibles en cuerpo/cabeceras, nunca en la URL o query string.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de arquitectura: tokens y datos sensibles viajan en cuerpo/cabeceras, nunca en la URL.</td></tr>
+<tr><td class="rid">v5.0.0-14.3.1</td><td class="rdesc">Limpiar el almacenamiento del cliente al terminar la sesion.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Limpieza de almacenamiento del cliente al cerrar sesion: comportamiento de frontend a verificar en codigo.</td></tr>
+</tbody>
+<tbody><tr class="chap"><td colspan="4">V15 &middot; Secure Coding and Architecture</td></tr>
+<tr><td class="rid">v5.0.0-15.1.1</td><td class="rdesc">Documentar plazos de remediacion por riesgo para componentes vulnerables.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de politica: plazos de remediacion por severidad (criticas 7 dias, altas 30 dias), documentados para este ejercicio.</td></tr>
+<tr><td class="rid">v5.0.0-15.2.1</td><td class="rdesc">Que los componentes reales no incumplan esos plazos de remediacion.</td><td class="rstate"><span class="pill pen">Pendiente</span></td><td class="rjust">Que los componentes reales no incumplan esos plazos: requiere un inventario/SCA del sistema desplegado.</td></tr>
+<tr><td class="rid">v5.0.0-15.3.1</td><td class="rdesc">Las respuestas de la API devuelven solo el subconjunto de campos necesario.</td><td class="rstate"><span class="pill ok">Cumple</span></td><td class="rjust">Decision de arquitectura: los endpoints devuelven proyecciones/DTOs explicitos, no la entidad completa.</td></tr>
+</tbody>
+</table>
+</section>
+
+</body>
+</html>
