@@ -8,7 +8,7 @@
 
 ## Entregable
 
-`Verificacion-ASVS-Junca.pdf` (11 págs, Letter). Fuente en `pdf/report.html`; regenerar con `python3 pdf/build.py` (requiere Google Chrome).
+`Marketplace_verificacion-SergioJunca.pdf` (11 págs, Letter). Fuente en `pdf/report.html`; regenerar con `python3 pdf/build.py` (requiere Google Chrome).
 
 Estructura: alcance (diagrama de arquitectura con los 5 puntos de falla de la Entrega 2), diagnóstico del `.tm7` real (74 amenazas sin triar), tabla de las 5 amenazas prioritarias mapeadas a requisitos ASVS reales, matriz de autorización, evaluación completa de los 70 requisitos L1 de ASVS 5.0.0 (26 Cumple / 0 Heredado / 37 Pendiente / 7 N.A., sin ningún "Brecha" abierta), evidencia del retiro atómico con un diagrama de la condición de carrera, plan de remediación, ruta a L2 y Anexo A con la matriz completa de los 70 requisitos.
 
